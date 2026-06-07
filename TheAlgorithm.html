@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TheAlgorithm</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --green:#00ff88;--green2:#00cc66;--green3:#009944;
+  --bg:#050e08;--panel:#0a1a0f;--panel2:#0d2015;--border:#1a4d2e;
+  --text:#b0ffcc;--text2:#66cc88;--text3:#3d7a55;
+  --amber:#ffaa00;--red:#ff4444;--blue:#44aaff;
+  --font-main:'Rajdhani',sans-serif;--font-mono:'Share Tech Mono',monospace;--font-title:'Orbitron',sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-main);font-size:15px;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,136,0.015) 2px,rgba(0,255,136,0.015) 4px);pointer-events:none;z-index:0;}
+nav{display:flex;align-items:center;background:var(--panel);border-bottom:1px solid var(--border);padding:0 16px;height:52px;gap:2px;position:sticky;top:0;z-index:100;flex-wrap:wrap;}
+.logo{font-family:var(--font-title);font-size:14px;color:var(--green);letter-spacing:2px;margin-right:14px;text-shadow:0 0 10px rgba(0,255,136,0.5);white-space:nowrap;}
+.logo span{color:var(--text2);}
+.tab-btn{background:none;border:none;color:var(--text2);font-family:var(--font-main);font-size:12px;font-weight:700;letter-spacing:1px;padding:6px 12px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;text-transform:uppercase;white-space:nowrap;}
+.tab-btn:hover{color:var(--green);}
+.tab-btn.active{color:var(--green);border-bottom-color:var(--green);}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+.tl-display{font-family:var(--font-mono);font-size:18px;color:var(--amber);text-shadow:0 0 8px rgba(255,170,0,0.4);}
+.tl-label{font-size:10px;color:var(--text3);margin-right:4px;}
+.section{display:none;padding:20px;max-width:1280px;margin:0 auto;position:relative;z-index:1;}
+.section.active{display:block;}
+.game-grid{display:grid;grid-template-columns:270px 1fr 250px;gap:14px;}
+@media(max-width:960px){.game-grid{grid-template-columns:1fr;}}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px;}
+.panel-title{font-family:var(--font-title);font-size:10px;letter-spacing:2px;color:var(--green3);text-transform:uppercase;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.diff-btn{display:block;width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--font-main);font-weight:700;font-size:13px;padding:9px 12px;margin-bottom:7px;cursor:pointer;transition:all .2s;text-align:left;}
+.diff-btn:hover{border-color:var(--green3);color:var(--green);}
+.diff-btn.selected{border-color:var(--green);background:rgba(0,255,136,0.07);color:var(--green);}
+.diff-badge{float:right;font-size:10px;font-family:var(--font-mono);color:var(--text3);}
+.diff-reward{display:block;font-size:11px;color:var(--text3);margin-top:2px;font-weight:400;}
+.algo-area{display:flex;flex-direction:column;gap:11px;}
+.algo-editor-wrap{background:#000;border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+.algo-editor-header{background:var(--panel);padding:5px 10px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--border);}
+.editor-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.algo-editor{width:100%;min-height:200px;background:#000;color:#7fff7f;font-family:var(--font-mono);font-size:12px;border:none;outline:none;padding:12px;resize:vertical;line-height:1.6;tab-size:2;}
+.run-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.btn{background:var(--panel2);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--font-main);font-weight:700;font-size:13px;padding:7px 16px;cursor:pointer;transition:all .2s;letter-spacing:.5px;}
+.btn:hover{border-color:var(--green);color:var(--green);}
+.btn.primary{background:rgba(0,255,136,0.1);border-color:var(--green);color:var(--green);}
+.btn.primary:hover{background:rgba(0,255,136,0.2);}
+.btn.danger{border-color:var(--red);color:var(--red);}
+.btn.danger:hover{background:rgba(255,68,68,0.1);}
+.btn:disabled{opacity:.35;cursor:not-allowed;pointer-events:none;}
+.progress-wrap{background:#000;border:1px solid var(--border);border-radius:4px;padding:12px;}
+.progress-bar-outer{background:#050e08;border:1px solid var(--border);border-radius:3px;height:10px;overflow:hidden;margin:8px 0;position:relative;}
+.progress-bar-inner{height:100%;background:linear-gradient(90deg,var(--green3),var(--green));border-radius:2px;width:0%;transition:width .15s linear;}
+.progress-stats{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11px;color:var(--text3);}
+.log-area{background:#000;border:1px solid var(--border);border-radius:4px;padding:10px;font-family:var(--font-mono);font-size:11px;max-height:150px;overflow-y:auto;color:var(--text2);}
+.log-line{margin:1px 0;}
+.log-line.success{color:var(--green);font-weight:700;}
+.log-line.warn{color:var(--amber);}
+.log-line.error{color:var(--red);}
+.log-line.info{color:var(--blue);}
+.stat-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(26,77,46,.35);font-size:13px;}
+.stat-row:last-child{border-bottom:none;}
+.stat-label{color:var(--text3);}
+.stat-val{font-family:var(--font-mono);color:var(--text);font-size:12px;}
+.stat-val.green{color:var(--green);}
+.stat-val.amber{color:var(--amber);}
+.store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;margin-top:14px;}
+.store-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:18px;position:relative;overflow:hidden;}
+.store-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--green3);}
+.store-card.owned{border-color:var(--green3);}
+.store-card.owned::before{background:var(--green);}
+.store-card-num{font-family:var(--font-title);font-size:26px;color:var(--green3);opacity:.25;position:absolute;top:8px;right:12px;}
+.store-card-title{font-family:var(--font-title);font-size:13px;color:var(--green);letter-spacing:1px;margin-bottom:6px;padding-right:30px;}
+.store-card-desc{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:12px;}
+.store-card-price{font-family:var(--font-mono);font-size:15px;color:var(--amber);}
+.store-card-price.free{color:var(--green);}
+.store-btn{margin-top:10px;width:100%;}
+.owned-badge{display:inline-block;background:rgba(0,255,136,0.1);border:1px solid var(--green3);border-radius:3px;padding:2px 8px;font-size:10px;color:var(--green);font-family:var(--font-mono);letter-spacing:1px;}
+.pdf-download-btn{margin-top:7px;width:100%;background:rgba(0,255,136,0.04);border:1px dashed var(--green3);border-radius:4px;color:var(--green2);font-family:var(--font-main);font-weight:700;font-size:11px;padding:6px;cursor:pointer;transition:all .2s;}
+.pdf-download-btn:hover{background:rgba(0,255,136,0.1);}
+.hw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:14px;}
+.hw-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px;}
+.hw-card-title{font-family:var(--font-title);font-size:11px;color:var(--blue);letter-spacing:1px;margin-bottom:8px;}
+.hw-level-bar{background:#000;border-radius:2px;height:4px;margin:5px 0;}
+.hw-level-fill{height:100%;background:linear-gradient(90deg,#0044aa,var(--blue));border-radius:2px;transition:width .4s;}
+.hw-level-text{font-family:var(--font-mono);font-size:10px;color:var(--text3);display:flex;justify-content:space-between;}
+.hw-upgrade-btn{margin-top:8px;width:100%;background:rgba(68,170,255,0.07);border:1px solid #1a3d5a;border-radius:4px;color:#88ccff;font-family:var(--font-main);font-weight:700;font-size:11px;padding:6px;cursor:pointer;transition:all .2s;}
+.hw-upgrade-btn:hover{border-color:var(--blue);color:var(--blue);background:rgba(68,170,255,0.13);}
+.hw-upgrade-btn:disabled{opacity:.35;cursor:not-allowed;}
+.hw-upgrade-cost{font-family:var(--font-mono);font-size:10px;color:var(--amber);margin-top:3px;text-align:center;}
+.speed-indicator{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px;margin-bottom:14px;}
+.speed-val{font-family:var(--font-title);font-size:28px;color:var(--green);font-weight:900;}
+.cmd-table{width:100%;border-collapse:collapse;margin-top:10px;}
+.cmd-table th{background:var(--panel2);color:var(--green3);font-family:var(--font-title);font-size:10px;letter-spacing:1px;padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);}
+.cmd-table td{padding:7px 10px;border-bottom:1px solid rgba(26,77,46,.3);font-size:13px;vertical-align:top;line-height:1.5;}
+.cmd-table tr:last-child td{border-bottom:none;}
+.cmd-name{font-family:var(--font-mono);color:var(--green);font-size:11px;}
+.cmd-desc{color:var(--text2);}
+.cmd-ex{font-family:var(--font-mono);font-size:10px;color:var(--text3);background:#000;padding:1px 5px;border-radius:3px;display:inline-block;margin-top:2px;}
+.overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.88);z-index:999;align-items:center;justify-content:center;}
+.overlay.show{display:flex;}
+.overlay-box{background:var(--panel);border:1px solid var(--green);border-radius:8px;padding:28px;text-align:center;max-width:360px;animation:popIn .3s ease;}
+@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.overlay-title{font-family:var(--font-title);font-size:20px;color:var(--green);margin-bottom:6px;}
+.overlay-reward{font-family:var(--font-mono);font-size:32px;color:var(--amber);margin:10px 0;}
+@keyframes tlFlash{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-44px);opacity:0}}
+.tl-flash{position:fixed;font-family:var(--font-mono);font-size:15px;color:var(--amber);pointer-events:none;animation:tlFlash 1s ease forwards;z-index:300;font-weight:700;}
+.section-title{font-family:var(--font-title);font-size:20px;color:var(--green);letter-spacing:2px;margin-bottom:5px;}
+.section-sub{font-size:13px;color:var(--text3);margin-bottom:14px;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:#000;}
+::-webkit-scrollbar-thumb{background:var(--green3);border-radius:2px;}
+.target-box{background:#000;border:1px solid var(--green3);border-radius:4px;padding:10px;font-family:var(--font-mono);font-size:12px;margin-bottom:10px;}
+.target-box .tlabel{color:var(--text3);font-size:10px;margin-bottom:3px;}
+.target-box .tval{color:var(--amber);letter-spacing:2px;word-break:break-all;font-size:13px;min-height:18px;}
+.freq-table{font-family:var(--font-mono);font-size:10px;color:var(--text3);background:#000;border:1px solid var(--border);border-radius:3px;padding:6px 8px;margin-top:6px;line-height:1.8;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">THE<span>ALGORITHM</span></div>
+  <button class="tab-btn active" id="tnav-game" onclick="showTab('game')">🎮 Oyun</button>
+  <button class="tab-btn" id="tnav-store" onclick="showTab('store')">🛒 Mağaza</button>
+  <button class="tab-btn" id="tnav-hardware" onclick="showTab('hardware')">⚙️ Donanım</button>
+  <button class="tab-btn" id="tnav-commands" onclick="showTab('commands')">📚 Komutlar</button>
+  <div class="nav-right">
+    <div class="tl-display"><span class="tl-label">TL</span><span id="tl-display">0.00</span></div>
+  </div>
+</nav>
+
+<!-- OYUN TAB -->
+<div id="tab-game" class="section active">
+  <div class="game-grid">
+
+    <!-- SOL: Zorluk + Şifre -->
+    <div>
+      <div class="panel">
+        <div class="panel-title">Zorluk Seç</div>
+        <button class="diff-btn selected" onclick="selectDiff(0)" id="diff-0">
+          Seviye 1 <span class="diff-badge">6 hane</span>
+          <span class="diff-reward">+0.50 TL / çözüm</span>
+        </button>
+        <button class="diff-btn" onclick="selectDiff(1)" id="diff-1">
+          Seviye 2 <span class="diff-badge">12 hane</span>
+          <span class="diff-reward">+3.00 TL / çözüm</span>
+        </button>
+        <button class="diff-btn" onclick="selectDiff(2)" id="diff-2">
+          Seviye 3 <span class="diff-badge">20 hane</span>
+          <span class="diff-reward">+12.00 TL / çözüm</span>
+        </button>
+        <button class="diff-btn" onclick="selectDiff(3)" id="diff-3">
+          Seviye 4 <span class="diff-badge">100.000 hane</span>
+          <span class="diff-reward">+0.05 TL / çözüm</span>
+        </button>
+        <button class="diff-btn" onclick="selectDiff(4)" id="diff-4">
+          Seviye 5 <span class="diff-badge">100.000.000 hane</span>
+          <span class="diff-reward">+0.002 TL / çözüm</span>
+        </button>
+      </div>
+
+      <div class="panel" style="margin-top:12px;">
+        <div class="panel-title">Aktif Şifre</div>
+        <div class="target-box">
+          <div class="tlabel">Şifre önizleme (maskelenmiş):</div>
+          <div class="tval" id="target-preview">— şifre üretilmedi —</div>
+        </div>
+        <button class="btn primary" style="width:100%;" onclick="generateNewTarget()">🎲 Yeni Şifre Üret</button>
+        <div style="margin-top:8px;font-size:11px;color:var(--text3);line-height:1.5;" id="crack-status-msg">Zorluk seç → Şifre üret → Algoritma yaz → Başlat</div>
+      </div>
+
+      <div class="panel" style="margin-top:12px;">
+        <div class="panel-title">Frekans Analizi</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:5px;">Tüm çözümlerden istatistik — algoritman bunu kullanabilir.</div>
+        <div class="freq-table" id="freq-table">Henüz çözüm yok.</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:5px;">
+          📌 <code style="color:var(--green2);">get_freq(pos)</code> ile pozisyon bazlı istatistik al
+        </div>
+      </div>
+    </div>
+
+    <!-- ORTA: Editor + Progress -->
+    <div class="algo-area">
+      <div class="panel">
+        <div class="panel-title">Python Algoritma Editörü</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:8px;line-height:1.5;">
+          Editör boş başlar — algoritmanı sıfırdan yaz. Eğitimlerden öğren, komutlar sekmesine bak.
+          <br><span style="color:var(--green2);">attempt(s)</span> · <span style="color:var(--green2);">get_hint(pos)</span> · <span style="color:var(--green2);">binary_search(pos)</span> · <span style="color:var(--green2);">get_freq(pos)</span> · <span style="color:var(--green2);">skip_tried(s)</span> · <span style="color:var(--green2);">mark_tried(s)</span>
+        </div>
+        <div class="algo-editor-wrap">
+          <div class="algo-editor-header">
+            <div class="editor-dot" style="background:#ff5f57;"></div>
+            <div class="editor-dot" style="background:#ffbd2e;"></div>
+            <div class="editor-dot" style="background:#28ca41;"></div>
+            <span style="font-size:10px;color:var(--text3);margin-left:6px;font-family:var(--font-mono);">algorithm.py</span>
+            <span style="margin-left:auto;font-size:10px;color:var(--text3);font-family:var(--font-mono);" id="char-count">0 karakter</span>
+          </div>
+          <textarea class="algo-editor" id="algo-editor" spellcheck="false" placeholder="# Algoritmayı buraya yaz..."></textarea>
+        </div>
+        <div class="run-controls" style="margin-top:10px;">
+          <button class="btn primary" id="start-btn" onclick="startCracking()">▶ Başlat</button>
+          <button class="btn danger" id="stop-btn" onclick="stopCracking()" disabled>■ Durdur</button>
+          <button class="btn" onclick="clearLog()" style="font-size:11px;padding:7px 10px;">🗑 Log</button>
+          <span style="font-size:12px;color:var(--text3);margin-left:4px;" id="run-status">Hazır</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">İlerleme</div>
+        <div class="progress-wrap">
+          <div class="progress-stats">
+            <span id="attempts-label">0 deneme</span>
+            <span id="speed-label">0/sn</span>
+            <span id="elapsed-label">0.0s</span>
+          </div>
+          <div class="progress-bar-outer"><div class="progress-bar-inner" id="progress-bar"></div></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;color:var(--text3);" id="progress-detail">
+            <span id="progress-pct">%0.00000</span>
+            <span id="eta-label">ETA: —</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Mevcut Deneme</div>
+        <div style="background:#000;border:1px solid var(--border);border-radius:4px;padding:8px;font-family:var(--font-mono);font-size:11px;color:var(--green2);word-break:break-all;min-height:36px;max-height:80px;overflow:hidden;" id="current-attempt-display">—</div>
+        <div style="display:flex;gap:16px;margin-top:6px;font-size:11px;">
+          <span style="color:var(--text3);">Eşleşen: <span style="color:var(--green);font-family:var(--font-mono);" id="match-display">—</span></span>
+          <span style="color:var(--text3);">Denenmemiş: <span style="color:var(--amber);font-family:var(--font-mono);" id="untried-display">—</span></span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Konsol</div>
+        <div class="log-area" id="log-area"></div>
+      </div>
+    </div>
+
+    <!-- SAĞ: Stats + Son çözümler -->
+    <div>
+      <div class="panel">
+        <div class="panel-title">İstatistikler</div>
+        <div class="stat-row"><span class="stat-label">Toplam Kazanç</span><span class="stat-val amber" id="stat-total">0.00 TL</span></div>
+        <div class="stat-row"><span class="stat-label">Oturum</span><span class="stat-val green" id="stat-session">0.00 TL</span></div>
+        <div class="stat-row"><span class="stat-label">Toplam Çözülen</span><span class="stat-val" id="stat-solved">0</span></div>
+        <div class="stat-row"><span class="stat-label">Toplam Deneme</span><span class="stat-val" id="stat-all-attempts">0</span></div>
+        <div class="stat-row"><span class="stat-label">En Hızlı</span><span class="stat-val" id="stat-fastest">—</span></div>
+        <div class="stat-row"><span class="stat-label">Hız Çarpanı</span><span class="stat-val amber" id="stat-multiplier">1.0x</span></div>
+        <div class="stat-row"><span class="stat-label">CPU / RAM / GPU</span><span class="stat-val green" id="stat-hwlevels">1/1/1</span></div>
+      </div>
+
+      <div class="panel" style="margin-top:12px;">
+        <div class="panel-title">Son Çözümler</div>
+        <div id="recent-solves" style="font-size:12px;color:var(--text2);">Henüz yok.</div>
+      </div>
+
+      <div class="panel" style="margin-top:12px;">
+        <div class="panel-title">Algoritma Performansı</div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.8;" id="algo-perf">
+          <div>Önceki çalışmalar: <span style="color:var(--text);font-family:var(--font-mono);" id="perf-runs">0</span></div>
+          <div>Ort. süre: <span style="color:var(--text);font-family:var(--font-mono);" id="perf-avg">—</span></div>
+          <div>Toplam atlanan: <span style="color:var(--green);font-family:var(--font-mono);" id="perf-skipped">0</span></div>
+          <div>Frekans isabeti: <span style="color:var(--amber);font-family:var(--font-mono);" id="perf-freq">%0</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MAĞAZA TAB -->
+<div id="tab-store" class="section">
+  <div class="section-title">EĞİTİM MAĞAZASI</div>
+  <div class="section-sub">TL kazanarak eğitimleri satın al, Python algoritmalarını öğren. Satın alınanlar locale kaydedilir. Bakiye: <span style="color:var(--amber);font-family:var(--font-mono);" id="store-tl">0.00</span> TL</div>
+  <div class="store-grid" id="store-grid"></div>
+</div>
+
+<!-- DONANIM TAB -->
+<div id="tab-hardware" class="section">
+  <div class="section-title">DONANIM YÜKSELTMELERİ</div>
+  <div class="section-sub">Parçaları yükselterek şifre kırma hızını artır. Her seviye TL harcar ama kalıcı olarak kaydedilir.</div>
+  <div class="speed-indicator">
+    <div class="panel-title" style="margin-bottom:8px;">Sistem Hız Göstergesi</div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div><div class="speed-val" id="hw-speed-val">1.00x</div><div style="font-size:11px;color:var(--text3);">toplam çarpan</div></div>
+      <div style="flex:1;">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px;" id="hw-desc">Temel sistem</div>
+        <div class="progress-bar-outer"><div class="progress-bar-inner" id="hw-bar" style="width:2%;"></div></div>
+        <div style="font-size:10px;color:var(--text3);margin-top:3px;">Maks: ~50x (tüm parçalar max seviyede)</div>
+      </div>
+    </div>
+  </div>
+  <div class="hw-grid" id="hw-grid"></div>
+</div>
+
+<!-- KOMUTLAR TAB -->
+<div id="tab-commands" class="section">
+  <div class="section-title">KOMUT REHBERİ</div>
+  <div class="section-sub">Eğitim 6 satın alınmadan bu sekme kilitlidir.</div>
+  <div id="cmd-locked-msg" style="background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:28px;text-align:center;">
+    <div style="font-size:36px;margin-bottom:10px;">🔒</div>
+    <div style="font-family:var(--font-title);font-size:15px;color:var(--text2);margin-bottom:7px;">Eğitim 6 Gerekli</div>
+    <div style="font-size:13px;color:var(--text3);">Mağaza'dan <b style="color:var(--amber);">Eğitim 6 — Tam Komut Rehberi</b>'ni satın al.</div>
+    <button class="btn" style="margin-top:14px;" onclick="showTab('store')">Mağazaya Git</button>
+  </div>
+  <div id="cmd-content" style="display:none;">
+    <div class="panel" style="margin-bottom:14px;">
+      <div class="panel-title">Temel API Komutları</div>
+      <table class="cmd-table">
+        <tr><th>Komut</th><th>Dönüş</th><th>Açıklama & Örnek</th></tr>
+        <tr><td><span class="cmd-name">attempt(s)</span></td><td><span class="cmd-name" style="color:var(--amber);">bool</span></td><td class="cmd-desc">Şifre denemesi yapar. Doğruysa True döner ve çözüm sayılır, yanlışsa False. Her çağrıda deneme sayacı artar.<br><span class="cmd-ex">if attempt("123456"): return "123456"</span></td></tr>
+        <tr><td><span class="cmd-name">get_hint(pos)</span></td><td><span class="cmd-name" style="color:var(--amber);">"low"/"high"</span></td><td class="cmd-desc">pos. hane 0-4 arası mı ("low") yoksa 5-9 arası mı ("high") olduğunu söyler. Arama uzayını yarıya düşürür.<br><span class="cmd-ex">h = get_hint(0) → "low" ya da "high"</span></td></tr>
+        <tr><td><span class="cmd-name">binary_search(pos)</span></td><td><span class="cmd-name" style="color:var(--amber);">int</span></td><td class="cmd-desc">Verilen pozisyondaki rakamı ikili arama ile bulur. Maksimum 4 denemede kesin sonuç verir.<br><span class="cmd-ex">d = binary_search(2) → 7</span></td></tr>
+        <tr><td><span class="cmd-name">get_freq(pos)</span></td><td><span class="cmd-name" style="color:var(--amber);">list[int]</span></td><td class="cmd-desc">O pozisyonda geçmişte hangi rakamların daha sık geçtiğini döner (10 elemanlı liste, en sık ilk). İstatistiksel öncelik için kullan.<br><span class="cmd-ex">freq = get_freq(0) → [3,7,1,5,...]</span></td></tr>
+        <tr><td><span class="cmd-name">mark_tried(s)</span></td><td><span class="cmd-name" style="color:var(--amber);">None</span></td><td class="cmd-desc">Denediğin bir şifreyi "denendi" listesine ekler. Tekrar denemeyi önlemek için skip_tried ile birlikte kullan.<br><span class="cmd-ex">mark_tried("000000")</span></td></tr>
+        <tr><td><span class="cmd-name">skip_tried(s)</span></td><td><span class="cmd-name" style="color:var(--amber);">bool</span></td><td class="cmd-desc">Bu şifre daha önce denendiyse True döner (atla). Denemediyse False (dene). Gereksiz tekrarları engeller.<br><span class="cmd-ex">if skip_tried(guess): continue</span></td></tr>
+        <tr><td><span class="cmd-name">get_tried_count()</span></td><td><span class="cmd-name" style="color:var(--amber);">int</span></td><td class="cmd-desc">Bu oturumda toplam kaç farklı şifre denendiğini döner.<br><span class="cmd-ex">n = get_tried_count() → 4821</span></td></tr>
+      </table>
+    </div>
+    <div class="panel" style="margin-bottom:14px;">
+      <div class="panel-title">Gelişmiş Teknikler</div>
+      <table class="cmd-table">
+        <tr><th>Teknik</th><th>Karmaşıklık</th><th>Açıklama</th></tr>
+        <tr><td><span class="cmd-name">Kaba Kuvvet</span></td><td><span class="cmd-name" style="color:var(--red);">O(10^n)</span></td><td class="cmd-desc">Tüm kombinasyonları sırayla dener. Küçük n (≤6) için çalışır.<br><span class="cmd-ex">for i in range(10**n): attempt(str(i).zfill(n))</span></td></tr>
+        <tr><td><span class="cmd-name">Hane Bazlı Arama</span></td><td><span class="cmd-name" style="color:var(--amber);">O(n×10)</span></td><td class="cmd-desc">Her haneyi bağımsız bul, birleştir. Kaba kuvvetten çok daha hızlı.<br><span class="cmd-ex">result=[find_digit(i) for i in range(n)]</span></td></tr>
+        <tr><td><span class="cmd-name">İkili Arama</span></td><td><span class="cmd-name" style="color:var(--green);">O(n×4)</span></td><td class="cmd-desc">Her hane için binary_search(). En verimli. Büyük şifrelerde şart.<br><span class="cmd-ex">''.join(str(binary_search(i)) for i in range(n))</span></td></tr>
+        <tr><td><span class="cmd-name">Frekans Önceliği</span></td><td><span class="cmd-name" style="color:var(--green);">O(n×avg)</span></td><td class="cmd-desc">get_freq(pos) ile istatistiksel en olası rakamı önce dene.<br><span class="cmd-ex">for d in get_freq(pos): if check(pos,d): ...</span></td></tr>
+        <tr><td><span class="cmd-name">Hibrit</span></td><td><span class="cmd-name" style="color:var(--green);">O(n×3)</span></td><td class="cmd-desc">get_hint → aralığı daralt → frekans sırala → en olasıyı dene. Tüm komutları birleştirir.<br><span class="cmd-ex">hint=get_hint(p); freq=get_freq(p); ...</span></td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Hata & Durum Kodları</div>
+      <table class="cmd-table">
+        <tr><th>Kod</th><th>Anlam</th></tr>
+        <tr><td><span class="cmd-name" style="color:var(--red);">ERR_NO_TARGET</span></td><td class="cmd-desc">Şifre üretilmemiş. "Yeni Şifre Üret" butonuna bas.</td></tr>
+        <tr><td><span class="cmd-name" style="color:var(--red);">ERR_WRONG_LEN</span></td><td class="cmd-desc">attempt() çağrısında yanlış uzunlukta string verildi.</td></tr>
+        <tr><td><span class="cmd-name" style="color:var(--amber);">WARN_SLOW_ALGO</span></td><td class="cmd-desc">Algoritma çok yavaş. Donanım yükselt ya da daha iyi algoritma yaz.</td></tr>
+        <tr><td><span class="cmd-name" style="color:var(--amber);">WARN_REPEAT</span></td><td class="cmd-desc">Aynı şifre tekrar denendi. skip_tried/mark_tried kullan.</td></tr>
+        <tr><td><span class="cmd-name" style="color:var(--green);">OK_SOLVED</span></td><td class="cmd-desc">Şifre bulundu, ödül verildi.</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="solve-overlay">
+  <div class="overlay-box">
+    <div class="overlay-title">🔓 ŞİFRE KIRIDI!</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:7px;">Çözülen şifre:</div>
+    <div style="font-family:var(--font-mono);font-size:12px;color:var(--green);word-break:break-all;background:#000;padding:7px;border-radius:4px;margin-bottom:10px;max-height:60px;overflow:hidden;" id="solved-pw-display"></div>
+    <div class="overlay-reward" id="overlay-reward">+0.000 TL</div>
+    <div style="font-size:12px;color:var(--text3);" id="overlay-time"></div>
+    <button class="btn primary" style="width:100%;margin-top:12px;" onclick="closeOverlay()">Devam Et →</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+// ZORLUKLAR — 6 / 12 / 20 / 100000 / 100000000
+// ══════════════════════════════════════════════════
+const DIFF = [
+  {name:'Seviye 1', len:6,         reward:0.50,   baseSpeed:500,  label:'6 hane'},
+  {name:'Seviye 2', len:12,        reward:3.00,   baseSpeed:320,  label:'12 hane'},
+  {name:'Seviye 3', len:20,        reward:12.00,  baseSpeed:200,  label:'20 hane'},
+  {name:'Seviye 4', len:100000,    reward:0.05,   baseSpeed:60,   label:'100.000 hane'},
+  {name:'Seviye 5', len:100000000, reward:0.002,  baseSpeed:15,   label:'100.000.000 hane'},
+];
+
+const HW_ITEMS = [
+  {id:'cpu',   name:'İşlemci (CPU)',     desc:'Temel hesaplama hızı',         maxLevel:10, baseCost:5,  mpl:0.35},
+  {id:'ram',   name:'Bellek (RAM)',      desc:'Paralel işlem & önbellek',      maxLevel:10, baseCost:4,  mpl:0.28},
+  {id:'gpu',   name:'Ekran Kartı (GPU)', desc:'Yoğun matris hesaplama',        maxLevel:10, baseCost:9,  mpl:0.45},
+  {id:'cool',  name:'Soğutma',          desc:'Sürekli çalışma verimliliği',   maxLevel:5,  baseCost:6,  mpl:0.20},
+  {id:'ssd',   name:'SSD Depolama',     desc:'Veri erişim & yazma hızı',      maxLevel:5,  baseCost:3,  mpl:0.12},
+  {id:'net',   name:'Ağ (Network)',     desc:'Bulut işlem paraleli',          maxLevel:5,  baseCost:7,  mpl:0.18},
+];
+
+const STORE_ITEMS = [
+  {id:'edu1', title:'Eğitim 1 — Giriş',            desc:'Python temelleri, değişkenler, döngüler, ilk kaba kuvvet algoritması. Başlangıç için zorunlu.',                             price:0,  pages:12},
+  {id:'edu2', title:'Eğitim 2 — Hane Bazlı Arama', desc:'Her haneyi bağımsız aramak. O(10^n) kaba kuvveti O(n×10) seviyesine çekmek.',                                             price:10, pages:18},
+  {id:'edu3', title:'Eğitim 3 — Hinting Sistemi',  desc:'get_hint() ile arama uzayını yarıya indir. Koşullu dallanma ve ipucu tabanlı strateji.',                                  price:18, pages:22},
+  {id:'edu4', title:'Eğitim 4 — İkili Arama',      desc:'binary_search() ile her haneyi O(log10) ≈ 4 denemede bul. Büyük şifreler için kritik.',                                   price:28, pages:28},
+  {id:'edu5', title:'Eğitim 5 — İleri Algoritmalar',desc:'Frekans analizi, skip_tried/mark_tried, hibrit stratejiler, olasılık tablosu, tekrar önleme.',                           price:44, pages:35},
+  {id:'edu6', title:'Eğitim 6 — Tam Komut Rehberi',desc:'Tüm API komutları, hata kodları, performans analizi, optimizasyon ipuçları. Diğer 5 eğitimin toplamı kadar kapsamlı.',   price:100, pages:62},
+];
+
+// ══════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════
+let S = {
+  tl:0, sessionTl:0, totalSolved:0, totalAttempts:0,
+  fastestTime:null, selectedDiff:0,
+  targetPassword:null,
+  cracking:false,
+  crackInterval:null, displayInterval:null,
+  attemptCount:0, crackStart:null,
+  recentSolves:[],
+  hw:{cpu:1,ram:1,gpu:1,cool:1,ssd:1,net:1},
+  owned:{}, pdfDownloads:{}, algo:'',
+  // Frekans verisi: {pos: [count0..count9]}
+  freqData:{},
+  // Denenmiş şifreler seti (sadece küçük şifreler için, RAM limiti var)
+  triedSet:new Set(),
+  // Performans
+  perfRuns:0, perfTotalTime:0, perfSkipped:0, perfFreqHit:0, perfFreqTry:0,
+};
+
+function loadState(){
+  try{
+    const raw=localStorage.getItem('thealgo_v2');
+    if(raw){
+      const p=JSON.parse(raw);
+      // Primitives & objects
+      ['tl','sessionTl','totalSolved','totalAttempts','fastestTime',
+       'selectedDiff','recentSolves','hw','owned','pdfDownloads','algo',
+       'freqData','perfRuns','perfTotalTime','perfSkipped','perfFreqHit','perfFreqTry'
+      ].forEach(k=>{if(p[k]!==undefined)S[k]=p[k];});
+    }
+  }catch(e){}
+}
+function saveState(){
+  try{
+    const toSave={...S};
+    delete toSave.crackInterval; delete toSave.displayInterval;
+    delete toSave.triedSet; delete toSave.cracking;
+    toSave.targetPassword=null; // don't persist mid-crack password
+    localStorage.setItem('thealgo_v2',JSON.stringify(toSave));
+  }catch(e){}
+}
+
+// ══════════════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════════════
+function showTab(name){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.getElementById('tnav-'+name).classList.add('active');
+  if(name==='store')renderStore();
+  if(name==='hardware')renderHardware();
+  if(name==='commands')renderCommands();
+}
+
+// ══════════════════════════════════════════════════
+// TL
+// ══════════════════════════════════════════════════
+function updateTL(){
+  document.getElementById('tl-display').textContent=S.tl.toFixed(2);
+  const el=document.getElementById('store-tl');if(el)el.textContent=S.tl.toFixed(2);
+  document.getElementById('stat-total').textContent=S.tl.toFixed(2)+' TL';
+  document.getElementById('stat-session').textContent=S.sessionTl.toFixed(2)+' TL';
+}
+function addTL(amount){
+  S.tl+=amount; S.sessionTl+=amount; updateTL();
+  // Flash near nav
+  const fl=document.createElement('div');
+  fl.className='tl-flash';fl.textContent='+'+amount.toFixed(3)+' TL';
+  fl.style.right='20px'; fl.style.top='60px';
+  document.body.appendChild(fl);setTimeout(()=>fl.remove(),1100);
+}
+
+// ══════════════════════════════════════════════════
+// HW MULTIPLIER
+// ══════════════════════════════════════════════════
+function getMultiplier(){
+  let m=1;
+  HW_ITEMS.forEach(item=>{const lvl=(S.hw[item.id]||1)-1;m+=lvl*item.mpl;});
+  return parseFloat(m.toFixed(3));
+}
+function getAttemptsPerTick(diffIdx){
+  return Math.max(1, Math.floor(DIFF[diffIdx].baseSpeed * getMultiplier()));
+}
+
+// ══════════════════════════════════════════════════
+// ZORLUK
+// ══════════════════════════════════════════════════
+function selectDiff(i){
+  S.selectedDiff=i;
+  document.querySelectorAll('.diff-btn').forEach((b,idx)=>b.classList.toggle('selected',idx===i));
+}
+
+// ══════════════════════════════════════════════════
+// ŞİFRE ÜRET
+// ══════════════════════════════════════════════════
+function generateNewTarget(){
+  stopCracking();
+  const d=DIFF[S.selectedDiff];
+  S.triedSet=new Set();
+
+  if(d.len<=20){
+    let pw='';
+    for(let i=0;i<d.len;i++) pw+=Math.floor(Math.random()*10).toString();
+    S.targetPassword=pw;
+    const masked=pw.substring(0,1)+'•'.repeat(pw.length-2)+pw.substring(pw.length-1);
+    document.getElementById('target-preview').textContent=masked+'  ('+d.len+' hane)';
+  } else {
+    // Büyük şifreler: sanal temsil
+    S.targetPassword='__LARGE__'+d.len+'__'+Math.floor(Math.random()*1e9).toString();
+    document.getElementById('target-preview').textContent='['+formatNum(d.len)+' haneli şifre üretildi]';
+  }
+
+  document.getElementById('crack-status-msg').textContent='✅ Şifre hazır. Algoritmayı yaz → Başlat';
+  clearLog();
+  log('[SYS] Yeni şifre üretildi. Uzunluk: '+d.len+' hane | Zorluk: '+d.name,'info');
+  // Reset progress
+  document.getElementById('progress-bar').style.width='0%';
+  document.getElementById('progress-pct').textContent='%0.00000';
+  document.getElementById('eta-label').textContent='ETA: —';
+  document.getElementById('attempts-label').textContent='0 deneme';
+  document.getElementById('speed-label').textContent='0/sn';
+  document.getElementById('elapsed-label').textContent='0.0s';
+  document.getElementById('current-attempt-display').textContent='—';
+  document.getElementById('match-display').textContent='—';
+  document.getElementById('untried-display').textContent='—';
+  saveState();
+}
+
+// ══════════════════════════════════════════════════
+// LOG
+// ══════════════════════════════════════════════════
+function log(msg,type){
+  const area=document.getElementById('log-area');
+  const line=document.createElement('div');
+  line.className='log-line'+(type?' '+type:'');
+  const t=new Date(); const ts=t.getHours().toString().padStart(2,'0')+':'+t.getMinutes().toString().padStart(2,'0')+':'+t.getSeconds().toString().padStart(2,'0');
+  line.textContent='['+ts+'] '+msg;
+  area.appendChild(line);
+  if(area.children.length>200) area.removeChild(area.firstChild);
+  area.scrollTop=area.scrollHeight;
+}
+function clearLog(){document.getElementById('log-area').innerHTML='';}
+
+// ══════════════════════════════════════════════════
+// SIMÜLASYON KOMUTELERİ (oyuncu kodunun kullandığı API)
+// ══════════════════════════════════════════════════
+let _simTarget=null;
+let _simAttempts=0;
+let _simTried=new Set();
+let _simFreqHit=0; _simFreqTry=0;
+
+function sim_attempt(s){
+  _simAttempts++;
+  if(_simTarget===null)return false;
+  if(_simTarget.startsWith('__LARGE__')) {
+    // Büyük şifre: probability based
+    return false;
+  }
+  return s===_simTarget;
+}
+function sim_get_hint(pos){
+  if(!_simTarget||_simTarget.startsWith('__LARGE__')) return 'low';
+  const d=parseInt(_simTarget[pos]||'0');
+  return d<=4?'low':'high';
+}
+function sim_binary_search(pos){
+  if(!_simTarget||_simTarget.startsWith('__LARGE__')){
+    return Math.floor(Math.random()*10);
+  }
+  return parseInt(_simTarget[pos]||'0');
+}
+function sim_get_freq(pos){
+  const key=String(S.selectedDiff)+'_'+pos;
+  const counts=S.freqData[key]||Array(10).fill(0);
+  const idxs=[0,1,2,3,4,5,6,7,8,9];
+  idxs.sort((a,b)=>counts[b]-counts[a]);
+  _simFreqTry++;
+  // check if top freq digit matches real target
+  if(_simTarget&&!_simTarget.startsWith('__LARGE__')){
+    const real=parseInt(_simTarget[pos]||'0');
+    if(idxs[0]===real) _simFreqHit++;
+  }
+  return idxs;
+}
+function sim_mark_tried(s){_simTried.add(s);}
+function sim_skip_tried(s){return _simTried.has(s);}
+function sim_get_tried_count(){return _simTried.size;}
+
+// ══════════════════════════════════════════════════
+// BAŞLAT
+// ══════════════════════════════════════════════════
+function startCracking(){
+  if(!S.targetPassword){alert('Önce Yeni Şifre Üret!');return;}
+  if(S.cracking)return;
+  const algoCode=document.getElementById('algo-editor').value.trim();
+  if(!algoCode){alert('Editör boş! Bir algoritma yaz.');return;}
+
+  S.cracking=true;
+  S.attemptCount=0;
+  S.crackStart=Date.now();
+  S.algo=algoCode;
+  _simTarget=S.targetPassword;
+  _simAttempts=0;
+  _simTried=new Set();
+  _simFreqHit=0; _simFreqTry=0;
+
+  const d=DIFF[S.selectedDiff];
+
+  document.getElementById('start-btn').disabled=true;
+  document.getElementById('stop-btn').disabled=false;
+  document.getElementById('run-status').textContent='⚙️ Çalışıyor...';
+
+  log('[START] Algoritma başlatıldı. Zorluk: '+d.name+' | Hedef: '+d.len+' hane','');
+  log('[INFO] Hız çarpanı: '+getMultiplier()+'x | ~'+formatNum(getAttemptsPerTick(S.selectedDiff))+' deneme/sn','info');
+
+  // Parse algorithm for "smart" detection
+  const hasBinarySearch = algoCode.includes('binary_search');
+  const hasHint = algoCode.includes('get_hint');
+  const hasFreq = algoCode.includes('get_freq');
+  const hasSkip = algoCode.includes('skip_tried');
+
+  if(hasBinarySearch) log('[ALGO] İkili arama algılandı → yüksek hız modu','info');
+  if(hasFreq) log('[ALGO] Frekans analizi algılandı → istatistiksel öncelik aktif','info');
+  if(hasSkip) log('[ALGO] Tekrar önleme algılandı → skip_tried aktif','info');
+  if(!hasBinarySearch&&!hasHint&&!hasFreq) log('[WARN] Kaba kuvvet algılandı → yavaş, donanım yükselt','warn');
+
+  // Algorithm efficiency score determines base solve time
+  let efficiency = 1.0;
+  if(hasBinarySearch) efficiency *= 0.03; // binary search = very fast
+  if(hasHint) efficiency *= 0.45;
+  if(hasFreq) efficiency *= 0.7;
+  if(hasSkip) efficiency *= 0.85;
+
+  const mult = getMultiplier();
+  // Expected solve time (seconds) based on difficulty and algo quality
+  // Base times: lvl1=2s, lvl2=6s, lvl3=15s, lvl4=60s, lvl5=300s at efficiency=1, mult=1
+  const baseTimes=[2,6,15,60,300];
+  const expectedSolveTime = Math.max(1.5, baseTimes[S.selectedDiff] * efficiency / mult);
+
+  const tickMs=100;
+  const attPerTick=getAttemptsPerTick(S.selectedDiff);
+
+  // For large passwords: simulate virtual progress based on expected solve time
+  const isLarge = d.len > 20;
+  let totalVirtualSpace = isLarge ? 1e12 : Math.min(Math.pow(10, d.len), 1e12);
+
+  let progressSim=0;
+  let solved=false;
+
+  S.crackInterval=setInterval(()=>{
+    if(!S.cracking){clearInterval(S.crackInterval);return;}
+
+    const elapsed=(Date.now()-S.crackStart)/1000;
+    S.attemptCount += attPerTick;
+    S.totalAttempts += attPerTick;
+    _simAttempts += attPerTick;
+
+    // Progress simulation
+    progressSim = Math.min(99.9, elapsed/expectedSolveTime * 100);
+
+    // Update bar
+    document.getElementById('progress-bar').style.width=progressSim.toFixed(2)+'%';
+
+    // Pct display
+    if(!isLarge){
+      const realPct = (S.attemptCount / Math.pow(10, d.len)) * 100;
+      document.getElementById('progress-pct').textContent='%'+realPct.toFixed(5);
+    } else {
+      document.getElementById('progress-pct').textContent='sim: %'+progressSim.toFixed(3);
+    }
+
+    // ETA
+    const remaining = expectedSolveTime - elapsed;
+    document.getElementById('eta-label').textContent = remaining>0 ? 'ETA: '+remaining.toFixed(1)+'s' : 'ETA: yakında...';
+
+    // Stats
+    const speed=Math.floor(S.attemptCount/Math.max(elapsed,0.01));
+    document.getElementById('attempts-label').textContent=formatNum(S.attemptCount)+' deneme';
+    document.getElementById('speed-label').textContent=formatNum(speed)+'/sn';
+    document.getElementById('elapsed-label').textContent=elapsed.toFixed(1)+'s';
+    document.getElementById('stat-all-attempts').textContent=formatNum(S.totalAttempts);
+
+    // Show fake current attempt
+    if(d.len<=20 && S.targetPassword && !isLarge){
+      const fake=makeFakeAttempt(d.len, S.targetPassword, progressSim/100);
+      document.getElementById('current-attempt-display').textContent=fake;
+      const matchC=countMatch(fake, S.targetPassword);
+      document.getElementById('match-display').textContent=matchC+'/'+d.len;
+    } else {
+      const fakeSegment=Array.from({length:Math.min(d.len,16)},()=>Math.floor(Math.random()*10)).join('');
+      document.getElementById('current-attempt-display').textContent=fakeSegment+(d.len>16?'…':'');
+      document.getElementById('match-display').textContent='(büyük)';
+    }
+    document.getElementById('untried-display').textContent=formatNum(Math.max(0, Math.pow(10, Math.min(d.len,9)) - S.attemptCount));
+
+    // Solve check: probability increases as we approach expected time
+    const solveProb = elapsed >= expectedSolveTime ? 0.9 : (elapsed / expectedSolveTime) * 0.15;
+    if(Math.random() < solveProb * (tickMs/1000) && elapsed > expectedSolveTime * 0.4){
+      solved=true;
+      onSolve(elapsed);
+    }
+  }, tickMs);
+}
+
+// ══════════════════════════════════════════════════
+// ÇÖZÜM
+// ══════════════════════════════════════════════════
+function onSolve(elapsed){
+  clearInterval(S.crackInterval);
+  S.cracking=false;
+
+  const d=DIFF[S.selectedDiff];
+
+  document.getElementById('progress-bar').style.width='100%';
+  document.getElementById('progress-pct').textContent='%100.00000';
+  document.getElementById('run-status').textContent='✅ Bulundu!';
+  document.getElementById('start-btn').disabled=false;
+  document.getElementById('stop-btn').disabled=true;
+
+  // Reward
+  addTL(d.reward);
+  S.totalSolved++;
+  document.getElementById('stat-solved').textContent=S.totalSolved;
+
+  if(!S.fastestTime||elapsed<S.fastestTime){
+    S.fastestTime=elapsed;
+    document.getElementById('stat-fastest').textContent=elapsed.toFixed(2)+'s';
+  }
+
+  // Update perf stats
+  S.perfRuns++;
+  S.perfTotalTime+=elapsed;
+  S.perfSkipped+=_simTried.size;
+  if(_simFreqTry>0) S.perfFreqHit+=_simFreqHit;
+  document.getElementById('perf-runs').textContent=S.perfRuns;
+  document.getElementById('perf-avg').textContent=(S.perfTotalTime/S.perfRuns).toFixed(2)+'s';
+  document.getElementById('perf-skipped').textContent=formatNum(S.perfSkipped);
+  document.getElementById('perf-freq').textContent=_simFreqTry>0?'%'+Math.round(_simFreqHit/_simFreqTry*100):'%0';
+
+  // Update freq data
+  const pw=S.targetPassword;
+  if(pw && !pw.startsWith('__LARGE__') && pw.length<=20){
+    for(let i=0;i<pw.length;i++){
+      const key=String(S.selectedDiff)+'_'+i;
+      if(!S.freqData[key]) S.freqData[key]=Array(10).fill(0);
+      S.freqData[key][parseInt(pw[i])]++;
+    }
+  }
+
+  const displayPw = pw && !pw.startsWith('__LARGE__') ? pw : '['+d.len+' haneli şifre]';
+
+  // Recent solves
+  S.recentSolves.unshift({pw:displayPw.substring(0,24)+(displayPw.length>24?'…':''), time:elapsed, reward:d.reward, diff:d.name});
+  if(S.recentSolves.length>8) S.recentSolves.pop();
+  renderRecentSolves();
+
+  log('[SOLVED] Şifre bulundu! Süre: '+elapsed.toFixed(2)+'s | +'+d.reward.toFixed(3)+' TL | '+formatNum(S.attemptCount)+' deneme','success');
+
+  // Overlay
+  document.getElementById('solved-pw-display').textContent=displayPw.substring(0,60)+(displayPw.length>60?'…':'');
+  document.getElementById('overlay-reward').textContent='+'+d.reward.toFixed(3)+' TL';
+  document.getElementById('overlay-time').textContent=elapsed.toFixed(2)+'s | '+formatNum(S.attemptCount)+' deneme | '+S.algo.includes('binary_search')?'İkili arama':'Kaba kuvvet';
+  document.getElementById('solve-overlay').classList.add('show');
+
+  renderFreqTable();
+  saveState();
+}
+
+function stopCracking(){
+  if(S.crackInterval) clearInterval(S.crackInterval);
+  S.cracking=false;
+  document.getElementById('start-btn').disabled=false;
+  document.getElementById('stop-btn').disabled=true;
+  document.getElementById('run-status').textContent='Durduruldu';
+  if(S.attemptCount>0) log('[STOP] Durduruldu. '+formatNum(S.attemptCount)+' deneme yapıldı.','warn');
+}
+function closeOverlay(){document.getElementById('solve-overlay').classList.remove('show');}
+
+// ══════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════
+function makeFakeAttempt(len, target, progress){
+  let s='';
+  for(let i=0;i<len;i++){
+    if(Math.random()<progress*0.9){
+      s+=target[i];
+    } else {
+      s+=Math.floor(Math.random()*10).toString();
+    }
+  }
+  return s;
+}
+function countMatch(a,b){
+  if(!b)return 0;
+  let c=0;
+  for(let i=0;i<Math.min(a.length,b.length);i++) if(a[i]===b[i])c++;
+  return c;
+}
+function formatNum(n){
+  n=Math.floor(n);
+  if(n>=1e9)return(n/1e9).toFixed(1)+'B';
+  if(n>=1e6)return(n/1e6).toFixed(1)+'M';
+  if(n>=1e3)return(n/1e3).toFixed(1)+'K';
+  return n.toString();
+}
+
+// ══════════════════════════════════════════════════
+// FREKANS TABLOSU
+// ══════════════════════════════════════════════════
+function renderFreqTable(){
+  const el=document.getElementById('freq-table');
+  const diff=S.selectedDiff;
+  const d=DIFF[diff];
+  if(d.len>20){el.textContent='(Büyük şifrelerde frekans analizi desteklenmez)';return;}
+  let html='Zorluk: '+d.name+'\n';
+  html+='Hane  | En sık rakamlar\n';
+  html+='------+------------------\n';
+  for(let pos=0;pos<Math.min(d.len,6);pos++){
+    const key=String(diff)+'_'+pos;
+    const counts=S.freqData[key]||Array(10).fill(0);
+    const sorted=[0,1,2,3,4,5,6,7,8,9].sort((a,b)=>counts[b]-counts[a]);
+    const top=sorted.slice(0,4).map(d=>d+'('+counts[d]+')').join(' ');
+    html+='  '+String(pos).padStart(2,'0')+'  | '+top+'\n';
+  }
+  if(d.len>6) html+='  ...  | ('+d.len+' hane toplam)\n';
+  el.textContent=html;
+}
+
+// ══════════════════════════════════════════════════
+// RECENT SOLVES
+// ══════════════════════════════════════════════════
+function renderRecentSolves(){
+  const el=document.getElementById('recent-solves');
+  if(!S.recentSolves.length){el.textContent='Henüz yok.';return;}
+  el.innerHTML=S.recentSolves.map(s=>`
+    <div style="padding:4px 0;border-bottom:1px solid rgba(26,77,46,.3);display:flex;justify-content:space-between;gap:8px;">
+      <span style="color:var(--text3);font-size:11px;">${s.diff}</span>
+      <span style="color:var(--text3);font-family:var(--font-mono);font-size:10px;">${s.time.toFixed(1)}s</span>
+      <span style="color:var(--amber);font-family:var(--font-mono);font-size:11px;">+${s.reward.toFixed(3)} TL</span>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════
+// MAĞAZA
+// ══════════════════════════════════════════════════
+function renderStore(){
+  updateTL();
+  const grid=document.getElementById('store-grid');
+  grid.innerHTML=STORE_ITEMS.map((item,i)=>{
+    const owned=!!S.owned[item.id];
+    return`<div class="store-card ${owned?'owned':''}" id="sc-${item.id}">
+      <div class="store-card-num">${i+1}</div>
+      <div class="store-card-title">${item.title}</div>
+      <div class="store-card-desc">${item.desc}<br><span style="font-size:10px;color:var(--text3);">📄 ${item.pages} sayfa PDF</span></div>
+      <div class="store-card-price ${item.price===0?'free':''}">${item.price===0?'ÜCRETSİZ':item.price.toFixed(0)+' TL'}</div>
+      ${owned
+        ?`<div style="margin-top:8px;"><span class="owned-badge">✓ ALINDI</span></div>
+          <button class="pdf-download-btn" onclick="downloadPDF('${item.id}')">⬇ PDF İndir (locale kaydedildi)</button>`
+        :`<button class="btn store-btn" onclick="buyItem('${item.id}')">${item.price===0?'Ücretsiz Al':'Satın Al — '+item.price+' TL'}</button>`
+      }
+    </div>`;
+  }).join('');
+}
+function buyItem(id){
+  const item=STORE_ITEMS.find(x=>x.id===id);
+  if(!item)return;
+  if(item.price>0&&S.tl<item.price){alert('Yetersiz TL!\nGerekli: '+item.price+' TL\nMevcut: '+S.tl.toFixed(2)+' TL');return;}
+  if(item.price>0){S.tl-=item.price;updateTL();}
+  S.owned[id]=true; S.pdfDownloads[id]=Date.now();
+  saveState(); renderStore();
+  log('[STORE] Satın alındı: '+item.title+' (locale kaydedildi)','success');
+}
+function downloadPDF(id){
+  const item=STORE_ITEMS.find(x=>x.id===id);
+  if(!item)return;
+  const content=getPDFContent(item);
+  const blob=new Blob([content],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=item.id+'_egitim.txt';a.click();
+  URL.revokeObjectURL(url);
+  log('[DL] İndirildi: '+item.id+'_egitim.txt','info');
+}
+function getPDFContent(item){
+  const map={
+    edu1:`╔══════════════════════════════════════╗
+║  TheAlgorithm — Eğitim 1: Giriş     ║
+╚══════════════════════════════════════╝
+
+PYTHON TEMELLERİ
+────────────────
+x = 5
+isim = "algo"
+liste = [1, 2, 3]
+
+DÖNGÜLER
+────────
+for i in range(10):
+    print(i)
+
+KABA KUVVET ALGORİTMASI (başlangıç)
+─────────────────────────────────────
+def crack(n):
+    for i in range(10**n):
+        guess = str(i).zfill(n)
+        if attempt(guess):
+            return guess
+    
+# NOT: Bu sadece 6 haneli şifreler için gerçekçidir.
+# Daha büyükler için sonraki eğitimleri satın al!`,
+    edu2:`╔══════════════════════════════════════╗
+║  TheAlgorithm — Eğitim 2: Hane Arama║
+╚══════════════════════════════════════╝
+
+HANE BAZLI ARAMA — O(n×10) karmaşıklık
+───────────────────────────────────────
+Her haneyi bağımsız bul, birleştir.
+Kaba kuvvet: 10^12 deneme (12 hane)
+Hane bazlı: sadece 12×10 = 120 deneme!
+
+def find_digit(pos, n):
+    # Test her rakamı o pozisyonda
+    current = ['0'] * n
+    for digit in range(10):
+        current[pos] = str(digit)
+        # Dikkat: tam şifreyi dene değil,
+        # sadece o pozisyonu izole et
+    
+def crack(n):
+    result = []
+    for pos in range(n):
+        for digit in range(10):
+            # ... pozisyon testi
+            pass
+    return ''.join(result)`,
+    edu3:`╔══════════════════════════════════════╗
+║  TheAlgorithm — Eğitim 3: Hinting   ║
+╚══════════════════════════════════════╝
+
+get_hint(pos) KULLANIMI
+───────────────────────
+"low"  → rakam 0,1,2,3,4 arasında
+"high" → rakam 5,6,7,8,9 arasında
+
+Arama uzayını yarıya indirir!
+
+def crack(n):
+    result = ['0'] * n
+    for pos in range(n):
+        hint = get_hint(pos)
+        if hint == "low":
+            candidates = range(0, 5)
+        else:
+            candidates = range(5, 10)
+        for digit in candidates:
+            # sadece 5 olasılık, 10 değil
+            test = result.copy()
+            test[pos] = str(digit)
+            # test et...
+    return ''.join(result)`,
+    edu4:`╔══════════════════════════════════════╗
+║  TheAlgorithm — Eğitim 4: İkili Ara ║
+╚══════════════════════════════════════╝
+
+binary_search(pos) — O(log10) ≈ 4 deneme
+──────────────────────────────────────────
+En verimli yöntem. Her haneyi max 4'te bulur.
+20 hane için: 20×4 = 80 deneme!
+100.000 hane için: 100.000×4 = 400.000 deneme.
+
+# Tek satır çözüm:
+def crack(n):
+    return ''.join(str(binary_search(i)) for i in range(n))
+
+# Manuel versiyon:
+def find_digit_binary(pos, password):
+    lo, hi = 0, 9
+    while lo < hi:
+        mid = (lo + hi) // 2
+        # mid veya altında mı?
+        if password[pos] <= mid:
+            hi = mid
+        else:
+            lo = mid + 1
+    return lo`,
+    edu5:`╔══════════════════════════════════════╗
+║  TheAlgorithm — Eğitim 5: İleri     ║
+╚══════════════════════════════════════╝
+
+FREKANS ANALİZİ
+───────────────
+get_freq(pos) → istatistiksel sıralama
+Geçmiş çözümlerden öğren!
+
+def crack(n):
+    result = []
+    for pos in range(n):
+        freq_order = get_freq(pos)
+        for digit in freq_order:
+            # en sık görüleni önce dene
+            test = result + [str(digit)] + ['0']*(n-pos-1)
+            # ...
+    return ''.join(result)
+
+TEKrar ÖNLEME
+─────────────
+for guess in candidates:
+    if skip_tried(guess):
+        continue  # daha önce denendi, atla
+    mark_tried(guess)
+    if attempt(guess):
+        return guess
+
+H�BRİT STRATEJİ (en hızlı)
+────────────────────────────
+def crack(n):
+    result = ['0'] * n
+    for pos in range(n):
+        hint = get_hint(pos)
+        freq = get_freq(pos)
+        candidates = [d for d in freq
+                      if (hint=='low' and d<=4) 
+                      or (hint=='high' and d>=5)]
+        # en olası adayları önce dene
+    return ''.join(result)`,
+    edu6:`╔══════════════════════════════════════╗
+║  TheAlgorithm — Eğitim 6: Rehber    ║
+╚══════════════════════════════════════╝
+
+TÜM KOMUTLAR
+─────────────
+attempt(s)          → bool   Şifre dene
+get_hint(pos)       → str    "low"/"high" ipucu
+binary_search(pos)  → int    Pozisyon ikili ara
+get_freq(pos)       → list   İstatistiksel sıra
+mark_tried(s)       → None   Denendiye işaretle
+skip_tried(s)       → bool   Denendi mi?
+get_tried_count()   → int    Toplam deneme sayısı
+
+HATA KODLARI
+─────────────
+ERR_NO_TARGET   → Şifre üretilmemiş
+ERR_WRONG_LEN   → Yanlış uzunluk
+WARN_SLOW_ALGO  → Algoritma yavaş
+WARN_REPEAT     → Tekrar deneme
+OK_SOLVED       → Başarılı
+
+EN İYİ ALGORİTMA ŞABLonu
+─────────────────────────
+def crack(n):
+    result = []
+    for pos in range(n):
+        hint = get_hint(pos)
+        freq = get_freq(pos)
+        lo = 5 if hint == 'high' else 0
+        hi = 9 if hint == 'high' else 4
+        candidates = [d for d in freq if lo <= d <= hi]
+        found = False
+        for digit in candidates:
+            test = ''.join(result) + str(digit) + '0'*(n-pos-1)
+            if not skip_tried(test):
+                mark_tried(test)
+                # pozisyon testi...
+                break
+    return ''.join(result)`
+  };
+  return map[item.id]||'İçerik bulunamadı.';
+}
+
+// ══════════════════════════════════════════════════
+// DONANIM
+// ══════════════════════════════════════════════════
+function renderHardware(){
+  const mult=getMultiplier();
+  document.getElementById('hw-speed-val').textContent=mult.toFixed(2)+'x';
+  document.getElementById('hw-bar').style.width=Math.min(mult/50*100,100)+'%';
+  document.getElementById('hw-desc').textContent=mult<2?'Temel sistem':mult<5?'İyi sistem':mult<12?'Güçlü sistem':mult<25?'Süper sistem':'Tanrı modu';
+  document.getElementById('stat-multiplier').textContent=mult.toFixed(2)+'x';
+  document.getElementById('stat-hwlevels').textContent=[S.hw.cpu,S.hw.ram,S.hw.gpu].join('/');
+
+  const grid=document.getElementById('hw-grid');
+  grid.innerHTML=HW_ITEMS.map(item=>{
+    const lvl=S.hw[item.id]||1;
+    const maxed=lvl>=item.maxLevel;
+    const cost=parseFloat((item.baseCost*Math.pow(1.8,lvl-1)).toFixed(2));
+    const pct=((lvl-1)/(item.maxLevel-1)*100)||0;
+    return`<div class="hw-card">
+      <div class="hw-card-title">${item.name}</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:7px;">${item.desc}</div>
+      <div class="hw-level-text"><span>Seviye ${lvl}/${item.maxLevel}</span><span>+${(item.mpl*100).toFixed(0)}%/seviye</span></div>
+      <div class="hw-level-bar"><div class="hw-level-fill" style="width:${pct}%"></div></div>
+      <button class="hw-upgrade-btn" ${maxed?'disabled':''} onclick="upgradeHW('${item.id}',${cost})">${maxed?'MAX':'▲ Yükselt'}</button>
+      <div class="hw-upgrade-cost">${maxed?'MAKSIMUM SEVİYE':'Maliyet: '+cost.toFixed(2)+' TL'}</div>
+    </div>`;
+  }).join('');
+}
+function upgradeHW(id,cost){
+  const item=HW_ITEMS.find(x=>x.id===id);if(!item)return;
+  const lvl=S.hw[id]||1;if(lvl>=item.maxLevel)return;
+  if(S.tl<cost){alert('Yetersiz TL!\nGerekli: '+cost.toFixed(2)+' TL\nMevcut: '+S.tl.toFixed(2)+' TL');return;}
+  S.tl-=cost; S.hw[id]=lvl+1; updateTL(); saveState(); renderHardware();
+  log('[HW] '+item.name+' → Seviye '+(lvl+1)+' | Hız: '+getMultiplier()+'x','success');
+}
+
+// ══════════════════════════════════════════════════
+// KOMUTLAR
+// ══════════════════════════════════════════════════
+function renderCommands(){
+  const owned=!!S.owned['edu6'];
+  document.getElementById('cmd-locked-msg').style.display=owned?'none':'block';
+  document.getElementById('cmd-content').style.display=owned?'block':'none';
+}
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+loadState();
+// Eğitim 1 otomatik
+if(!S.owned['edu1']){S.owned['edu1']=true;S.pdfDownloads['edu1']=Date.now();}
+updateTL();
+renderRecentSolves();
+renderFreqTable();
+document.getElementById('stat-total').textContent=S.tl.toFixed(2)+' TL';
+document.getElementById('stat-session').textContent=S.sessionTl.toFixed(2)+' TL';
+document.getElementById('stat-solved').textContent=S.totalSolved;
+document.getElementById('stat-all-attempts').textContent=formatNum(S.totalAttempts);
+if(S.fastestTime) document.getElementById('stat-fastest').textContent=S.fastestTime.toFixed(2)+'s';
+document.getElementById('stat-multiplier').textContent=getMultiplier().toFixed(2)+'x';
+document.getElementById('stat-hwlevels').textContent=[S.hw.cpu,S.hw.ram,S.hw.gpu].join('/');
+document.getElementById('perf-runs').textContent=S.perfRuns;
+document.getElementById('perf-avg').textContent=S.perfRuns>0?(S.perfTotalTime/S.perfRuns).toFixed(2)+'s':'—';
+document.getElementById('perf-skipped').textContent=formatNum(S.perfSkipped);
+document.getElementById('perf-freq').textContent='%'+(S.perfFreqTry>0?Math.round(S.perfFreqHit/S.perfFreqTry*100):0);
+
+// Char counter
+const editor=document.getElementById('algo-editor');
+if(S.algo) editor.value=S.algo;
+editor.addEventListener('input',function(){
+  S.algo=this.value; saveState();
+  document.getElementById('char-count').textContent=this.value.length+' karakter';
+});
+document.getElementById('char-count').textContent=editor.value.length+' karakter';
+
+// Diff buttons sync
+document.querySelectorAll('.diff-btn').forEach((b,i)=>b.classList.toggle('selected',i===S.selectedDiff));
+</script>
+</body>
+</html>
