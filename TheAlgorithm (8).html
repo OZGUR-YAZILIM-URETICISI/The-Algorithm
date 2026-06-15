@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TheAlgorithm</title>
+
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#050e08">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TheAlgorithm">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="TheAlgorithm">
+  <!-- PWA Manifest (injected dynamically by JS) -->
+
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --green:#00ff88;--green2:#00cc66;--green3:#009944;
+  --bg:#050e08;--panel:#0a1a0f;--panel2:#0d2015;--border:#1a4d2e;
+  --text:#c8ffd8;--text2:#80e8a0;--text3:#4a9060;
+  --amber:#ffaa00;--red:#ff5555;--blue:#55bbff;
+  --fm:'Rajdhani',sans-serif;--fm2:'Share Tech Mono',monospace;--ft:'Orbitron',sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--fm);font-size:15px;min-height:100vh;overflow-x:hidden;transition:background .3s;}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,136,.012) 2px,rgba(0,255,136,.012) 4px);pointer-events:none;z-index:0;}
+
+body.t-amber{--green:#ffaa00;--green2:#ff8800;--green3:#cc6600;--bg:#0e0a00;--panel:#1a1200;--panel2:#201500;--border:#4d3000;--text:#ffe8b0;--text2:#ffcc66;--text3:#806030;}
+body.t-cyan{--green:#00eeff;--green2:#00ccdd;--green3:#009aaa;--bg:#00080e;--panel:#00121a;--panel2:#00151f;--border:#004455;--text:#b0f0ff;--text2:#66ddee;--text3:#307080;}
+body.t-purple{--green:#cc88ff;--green2:#aa66ee;--green3:#8844cc;--bg:#080010;--panel:#100018;--panel2:#140020;--border:#3a1460;--text:#e8ccff;--text2:#bb88ee;--text3:#705090;}
+body.t-red{--green:#ff4466;--green2:#ee2244;--green3:#cc1133;--bg:#0e0005;--panel:#1a0008;--panel2:#200010;--border:#4d0018;--text:#ffcccc;--text2:#ee8888;--text3:#804040;}
+body.t-white{--green:#0055cc;--green2:#0044aa;--green3:#003388;--bg:#f0f4f8;--panel:#ffffff;--panel2:#e8edf5;--border:#c0cce0;--text:#1a2540;--text2:#2d4070;--text3:#7080a0;--amber:#c87000;--red:#cc2200;}
+body.t-white::before{display:none;}
+body.t-white .algo-editor{background:#f5f8fc;color:#1a3a1a;}
+body.t-white .log-area{background:#f0f4f8;}
+body.t-white .log-line.success{color:#005500;}
+body.t-white .log-line.info{color:#003399;}
+body.t-white .log-line.warn{color:#886600;}
+body.t-white .log-line.error{color:#cc0000;}
+
+nav{display:flex;align-items:center;background:var(--panel);border-bottom:2px solid var(--border);padding:0 12px;height:50px;gap:1px;position:sticky;top:0;z-index:100;overflow-x:auto;}
+.logo{font-family:var(--ft);font-size:13px;color:var(--green);letter-spacing:2px;margin-right:10px;white-space:nowrap;flex-shrink:0;text-shadow:0 0 8px rgba(0,255,136,.4);}
+.tab{background:none;border:none;color:var(--text3);font-family:var(--fm);font-size:12px;font-weight:700;letter-spacing:.5px;padding:5px 10px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
+.tab:hover{color:var(--green);}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.nav-r{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.tl-val{font-family:var(--fm2);font-size:17px;color:var(--amber);white-space:nowrap;}
+
+.sec{display:none;padding:16px;max-width:1280px;margin:0 auto;position:relative;z-index:1;}
+.sec.active{display:block;}
+
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:13px;}
+.ptitle{font-family:var(--ft);font-size:10px;letter-spacing:2px;color:var(--green3);text-transform:uppercase;margin-bottom:9px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.stitle{font-family:var(--ft);font-size:19px;color:var(--green);letter-spacing:2px;margin-bottom:5px;}
+.ssub{font-size:13px;color:var(--text3);margin-bottom:13px;}
+
+.btn{background:var(--panel2);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--fm);font-weight:700;font-size:13px;padding:7px 15px;cursor:pointer;transition:all .2s;}
+.btn:hover{border-color:var(--green);color:var(--green);}
+.btn.ok{background:rgba(0,255,136,.09);border-color:var(--green);color:var(--green);}
+.btn.ok:hover{background:rgba(0,255,136,.18);}
+.btn.danger{border-color:var(--red);color:var(--red);}
+.btn.danger:hover{background:rgba(255,85,85,.1);}
+.btn.blue{border-color:var(--blue);color:var(--blue);}
+.btn.blue:hover{background:rgba(85,187,255,.1);}
+.btn:disabled{opacity:.3;cursor:not-allowed;pointer-events:none;}
+
+.ggrid{display:grid;grid-template-columns:265px 1fr 245px;gap:12px;}
+@media(max-width:960px){.ggrid{grid-template-columns:1fr;}}
+
+.dbtn{display:block;width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--fm);font-weight:700;font-size:13px;padding:9px 11px;margin-bottom:6px;cursor:pointer;transition:all .2s;text-align:left;}
+.dbtn:hover{border-color:var(--green3);}
+.dbtn.sel{border-color:var(--green);background:rgba(0,255,136,.07);color:var(--green);}
+.dbtn .badge{float:right;font-size:10px;font-family:var(--fm2);color:var(--text3);}
+.dbtn .rew{display:block;font-size:11px;color:var(--text3);margin-top:1px;font-weight:400;}
+
+.ew{background:#000;border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+.eh{background:var(--panel);padding:5px 10px;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--border);}
+.ed{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.algo-editor{width:100%;min-height:200px;background:#000;color:#7fff7f;font-family:var(--fm2);font-size:12px;border:none;outline:none;padding:11px;resize:vertical;line-height:1.6;tab-size:2;}
+.errbar{background:#1a0000;border:1px solid var(--red);border-top:none;padding:6px 11px;font-family:var(--fm2);font-size:11px;color:var(--red);display:none;}
+.errbar.show{display:block;}
+
+.pbar-out{background:#050e08;border:1px solid var(--border);border-radius:3px;height:10px;overflow:hidden;margin:7px 0;}
+.pbar-in{height:100%;background:linear-gradient(90deg,var(--green3),var(--green));border-radius:2px;width:0%;transition:width .12s linear;}
+
+.log-area{background:#000;border:1px solid var(--border);border-radius:4px;padding:9px;font-family:var(--fm2);font-size:11px;max-height:140px;overflow-y:auto;color:var(--text2);}
+.ll{margin:1px 0;}
+.ll.s{color:var(--green);font-weight:700;}
+.ll.w{color:var(--amber);}
+.ll.e{color:var(--red);}
+.ll.i{color:var(--blue);}
+
+.srow{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(26,77,46,.3);font-size:13px;}
+.srow:last-child{border-bottom:none;}
+.sl{color:var(--text3);}
+.sv{font-family:var(--fm2);color:var(--text);font-size:12px;}
+.sv.g{color:var(--green);}
+.sv.a{color:var(--amber);}
+
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:13px;margin-top:12px;}
+.scard{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:17px;position:relative;overflow:hidden;}
+.scard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--green3);}
+.scard.owned{border-color:var(--green3);}
+.scard.owned::before{background:var(--green);}
+.scard-n{font-family:var(--ft);font-size:24px;color:var(--green3);opacity:.22;position:absolute;top:7px;right:11px;}
+.scard-t{font-family:var(--ft);font-size:12px;color:var(--green);letter-spacing:1px;margin-bottom:5px;padding-right:28px;}
+.scard-d{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:11px;}
+.scard-p{font-family:var(--fm2);font-size:15px;color:var(--amber);}
+.scard-p.free{color:var(--green);}
+.owned-badge{display:inline-block;background:rgba(0,255,136,.09);border:1px solid var(--green3);border-radius:3px;padding:2px 8px;font-size:10px;color:var(--green);font-family:var(--fm2);}
+
+.hwgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:12px;}
+.hwcard{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:13px;}
+.hwcard-t{font-family:var(--ft);font-size:10px;color:var(--blue);letter-spacing:1px;margin-bottom:7px;}
+.hwbar{background:#000;border-radius:2px;height:4px;margin:4px 0;}
+.hwbar-f{height:100%;background:linear-gradient(90deg,#003388,var(--blue));border-radius:2px;transition:width .4s;}
+.hwlvl{font-family:var(--fm2);font-size:10px;color:var(--text3);display:flex;justify-content:space-between;}
+
+.ahwgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:13px;margin-top:13px;}
+.ahwcard{background:var(--panel);border:1px solid var(--blue);border-radius:6px;padding:15px;position:relative;overflow:hidden;}
+.ahwcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--green));}
+.ahwcard.sold{opacity:.5;border-color:var(--border);}
+.ahwcard.sold::before{background:var(--border);}
+
+.lbcat{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;}
+.lbrow{display:flex;align-items:center;gap:10px;padding:9px 8px;border-bottom:1px solid rgba(26,77,46,.25);}
+.lbrow.me{background:rgba(0,255,136,.04);}
+
+.libgrid{display:grid;grid-template-columns:255px 1fr;gap:13px;}
+@media(max-width:800px){.libgrid{grid-template-columns:1fr;}}
+.libi{display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid rgba(26,77,46,.25);cursor:pointer;transition:background .15s;font-size:13px;}
+.libi:hover{background:rgba(0,255,136,.04);}
+.libi.active{background:rgba(0,255,136,.08);border-left:2px solid var(--green);}
+.libta{width:100%;min-height:300px;background:#000;color:#7fff7f;font-family:var(--fm2);font-size:12px;border:1px solid var(--border);border-radius:4px;padding:10px;resize:vertical;line-height:1.7;outline:none;}
+
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:12px;}
+.dcard{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:13px;}
+
+.spanel{display:none;position:fixed;top:52px;right:10px;background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:16px;z-index:500;min-width:230px;box-shadow:0 8px 32px rgba(0,0,0,.6);}
+.spanel.show{display:block;}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;}
+.tsw{width:100%;height:30px;border-radius:4px;border:2px solid transparent;cursor:pointer;transition:all .2s;font-size:10px;font-family:var(--fm);font-weight:700;}
+.tsw:hover,.tsw.active{border-color:var(--green);}
+
+.tog-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.tog-lbl{font-size:12px;color:var(--text2);flex:1;}
+.tog-btn{background:var(--panel2);border:1px solid var(--border);border-radius:12px;width:42px;height:22px;cursor:pointer;position:relative;transition:background .2s,border-color .2s;flex-shrink:0;}
+.tog-btn.on{background:var(--green3);border-color:var(--green);}
+.tog-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;background:var(--text3);border-radius:50%;transition:left .2s,background .2s;pointer-events:none;}
+.tog-btn.on .tog-thumb{left:23px;background:var(--green);}
+
+.pdfov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:800;flex-direction:column;}
+.pdfov.show{display:flex;}
+.pdfhdr{background:var(--panel);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:10px;}
+.pdfbody{flex:1;overflow-y:auto;padding:24px;background:#0a0a0a;}
+.pdfcontent{max-width:760px;margin:0 auto;font-family:var(--fm2);font-size:13px;color:#c8ffc8;line-height:1.9;white-space:pre-wrap;background:#050e08;border:1px solid var(--border);border-radius:6px;padding:28px;}
+
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;align-items:center;justify-content:center;}
+.modal-bg.show{display:flex;}
+.modal-box{background:var(--panel);border:1px solid var(--green);border-radius:8px;padding:28px;text-align:center;max-width:320px;width:90%;}
+.modal-inp{background:#000;border:1px solid var(--border);border-radius:4px;color:var(--green);font-family:var(--fm2);font-size:14px;padding:9px 13px;width:100%;outline:none;margin:13px 0;text-align:center;}
+.modal-inp:focus{border-color:var(--green);}
+
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:990;align-items:center;justify-content:center;}
+.overlay.show{display:flex;}
+.obox{background:var(--panel);border:1px solid var(--green);border-radius:8px;padding:26px;text-align:center;max-width:340px;animation:popIn .3s ease;width:90%;}
+@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+
+.ctbl{width:100%;border-collapse:collapse;margin-top:9px;}
+.ctbl th{background:var(--panel2);color:var(--green3);font-family:var(--ft);font-size:10px;letter-spacing:1px;padding:6px 9px;text-align:left;border-bottom:1px solid var(--border);}
+.ctbl td{padding:7px 9px;border-bottom:1px solid rgba(26,77,46,.25);font-size:13px;vertical-align:top;line-height:1.5;}
+.ctbl tr:last-child td{border-bottom:none;}
+.cm{font-family:var(--fm2);color:var(--green);font-size:11px;}
+.cd{color:var(--text2);}
+.cx{font-family:var(--fm2);font-size:10px;color:var(--text3);background:#000;padding:1px 5px;border-radius:3px;display:inline-block;margin-top:2px;}
+
+@keyframes tlFlash{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-44px);opacity:0}}
+.tlf{position:fixed;font-family:var(--fm2);font-size:15px;color:var(--amber);pointer-events:none;animation:tlFlash 1s ease forwards;z-index:300;font-weight:700;}
+
+/* PWA standalone mode */
+body.pwa-mode nav { padding-top: env(safe-area-inset-top, 0); }
+body.pwa-mode { padding-bottom: env(safe-area-inset-bottom, 0); }
+@media (display-mode: standalone) {
+  nav { padding-top: env(safe-area-inset-top, 0); }
+}
+
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:#000;}
+::-webkit-scrollbar-thumb{background:var(--green3);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- USERNAME MODAL -->
+<div class="modal-bg" id="umodal">
+  <div class="modal-box">
+    <div style="font-size:28px;margin-bottom:8px;">👤</div>
+    <div style="font-family:var(--ft);font-size:15px;color:var(--green);letter-spacing:2px;margin-bottom:5px;">HOŞ GELDİN</div>
+    <div style="font-size:13px;color:var(--text3);">Kullanıcı adını gir. Ayarlardan sonra değiştirebilirsin.</div>
+    <input class="modal-inp" id="uinp" maxlength="20" placeholder="kullanıcı adı...">
+    <button class="btn ok" style="width:100%;" onclick="saveUser()">Devam Et →</button>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="spanel" id="spanel">
+  <div style="font-family:var(--ft);font-size:10px;letter-spacing:2px;color:var(--green3);margin-bottom:12px;">AYARLAR</div>
+  <div style="font-size:12px;color:var(--text3);margin-bottom:5px;">Kullanıcı Adı</div>
+  <div style="display:flex;gap:6px;margin-bottom:13px;">
+    <input id="s-uname" style="background:#000;border:1px solid var(--border);border-radius:3px;color:var(--text);font-family:var(--fm2);font-size:12px;padding:5px 8px;flex:1;outline:none;">
+    <button class="btn" style="font-size:11px;padding:5px 9px;" onclick="changeUser()">✓</button>
+  </div>
+  <div style="font-size:12px;color:var(--text3);margin-bottom:7px;">Tema</div>
+  <div class="tgrid">
+    <button class="tsw active" style="background:#050e08;color:#00ff88;" onclick="setTheme('')" id="th-">Yeşil</button>
+    <button class="tsw" style="background:#0e0a00;color:#ffaa00;" onclick="setTheme('amber')" id="th-amber">Amber</button>
+    <button class="tsw" style="background:#00080e;color:#00eeff;" onclick="setTheme('cyan')" id="th-cyan">Cyan</button>
+    <button class="tsw" style="background:#080010;color:#cc88ff;" onclick="setTheme('purple')" id="th-purple">Mor</button>
+    <button class="tsw" style="background:#0e0005;color:#ff4466;" onclick="setTheme('red')" id="th-red">Kırmızı</button>
+    <button class="tsw" style="background:#f0f4f8;color:#0055cc;border:1px solid #c0cce0;" onclick="setTheme('white')" id="th-white">Açık</button>
+  </div>
+  <div style="font-size:12px;color:var(--text3);margin-bottom:8px;">Ses</div>
+  <div class="tog-row">
+    <span class="tog-lbl">Ses Efektleri</span>
+    <button class="tog-btn" id="sfx-btn" onclick="toggleSFX()"><span class="tog-thumb"></span></button>
+  </div>
+  <div class="tog-row">
+    <span class="tog-lbl">Arka Plan Müziği</span>
+    <button class="tog-btn" id="bgm-btn" onclick="toggleBGM()"><span class="tog-thumb"></span></button>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:13px;">
+    <span style="font-size:12px;color:var(--text3);">Ses</span>
+    <input type="range" id="vol-sl" min="0" max="100" value="30" oninput="setVol(this.value)" style="flex:1;accent-color:var(--green);">
+    <span id="vol-lbl" style="font-family:var(--fm2);font-size:10px;color:var(--text3);width:28px;">30%</span>
+  </div>
+  <button class="btn danger" style="width:100%;font-size:11px;margin-top:4px;" onclick="resetGame()">🗑 Kayıtları Sıfırla</button>
+  <button class="btn" style="width:100%;font-size:11px;margin-top:6px;" onclick="document.getElementById('spanel').classList.remove('show')">Kapat</button>
+</div>
+
+<!-- PDF OVERLAY -->
+<div class="pdfov" id="pdfov">
+  <div class="pdfhdr">
+    <button class="btn" onclick="document.getElementById('pdfov').classList.remove('show')" style="font-size:12px;padding:5px 12px;">← Geri</button>
+    <span id="pdf-title" style="font-family:var(--ft);font-size:12px;color:var(--green);letter-spacing:1px;"></span>
+    <button class="btn blue" style="margin-left:auto;font-size:11px;padding:5px 12px;" onclick="dlPDF()">⬇ İndir</button>
+  </div>
+  <div class="pdfbody"><div class="pdfcontent" id="pdf-body"></div></div>
+</div>
+
+<!-- SOLVE OVERLAY -->
+<div class="overlay" id="solveov">
+  <div class="obox">
+    <div style="font-family:var(--ft);font-size:18px;color:var(--green);margin-bottom:5px;">🔓 ŞİFRE KIRIDI!</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:5px;">Çözülen şifre:</div>
+    <div style="font-family:var(--fm2);font-size:11px;color:var(--green);word-break:break-all;background:#000;padding:7px;border-radius:4px;margin-bottom:9px;max-height:55px;overflow:hidden;" id="ov-pw"></div>
+    <div style="font-family:var(--fm2);font-size:28px;color:var(--amber);margin:8px 0;" id="ov-rew">+0.000 TL</div>
+    <div style="font-size:11px;color:var(--text3);" id="ov-time"></div>
+    <button class="btn ok" style="width:100%;margin-top:11px;" onclick="document.getElementById('solveov').classList.remove('show')">Devam Et →</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">THE<span style="color:var(--text2)">ALGORITHM</span></div>
+  <button class="tab active" id="t-game"     onclick="showTab('game')">🎮 Oyun</button>
+  <button class="tab"        id="t-store"    onclick="showTab('store')">🛒 Mağaza</button>
+  <button class="tab"        id="t-hw"       onclick="showTab('hw')">⚙️ Donanım</button>
+  <button class="tab"        id="t-cmd"      onclick="showTab('cmd')">📚 Komutlar</button>
+  <button class="tab"        id="t-lb"       onclick="showTab('lb')">🏆 Sıralama</button>
+  <button class="tab"        id="t-lib"      onclick="showTab('lib')">📖 Kütüphane</button>
+  <button class="tab"        id="t-depot"    onclick="showTab('depot')">🗄️ Depo</button>
+  <div class="nav-r">
+    <span id="uname-disp" style="font-family:var(--fm2);font-size:11px;color:var(--green3);"></span>
+    <span id="online-ind" style="font-size:10px;font-family:var(--fm2);padding:2px 6px;border-radius:3px;border:1px solid var(--border);color:var(--text3);">●</span>
+    <span id="upd-btn" onclick="goUpdate()" style="display:none;background:rgba(255,170,0,.15);border:1px solid var(--amber);border-radius:4px;padding:3px 8px;font-size:11px;color:var(--amber);cursor:pointer;">🔄 Güncelle</span>
+    <span style="font-family:var(--fm2);font-size:10px;color:var(--text3);" id="ver-lbl">v1.5.0</span>
+    <span class="tl-val"><span style="font-size:10px;color:var(--text3);margin-right:3px;">TL</span><span id="tl-disp">0.00</span></span>
+    <button style="background:none;border:1px solid var(--border);border-radius:4px;color:var(--text2);font-size:14px;width:30px;height:30px;cursor:pointer;" onclick="document.getElementById('spanel').classList.toggle('show')" title="Ayarlar">⚙</button>
+    <button id="install-btn" style="display:none;background:rgba(0,255,136,.1);border:1px solid var(--green);border-radius:4px;color:var(--green);font-family:var(--fm);font-weight:700;font-size:11px;padding:4px 10px;cursor:pointer;align-items:center;gap:4px;" title="Uygulamayı Yükle">📲 Yükle</button>
+    <button id="dl-btn" onclick="doDownload()" style="display:none;background:none;border:1px solid var(--green);border-radius:4px;color:var(--green);font-size:13px;width:30px;height:30px;cursor:pointer;" title="HTML İndir">⬇</button>
+  </div>
+</nav>
+
+<!-- ═══ OYUN ═══ -->
+<div id="sec-game" class="sec active">
+  <div class="ggrid">
+    <!-- SOL -->
+    <div>
+      <div class="panel">
+        <div class="ptitle">Zorluk Seç</div>
+        <button class="dbtn sel" onclick="selDiff(0)" id="d0">Seviye 1 <span class="badge">6 hane</span><span class="rew">+0.50 TL / çözüm</span></button>
+        <button class="dbtn"     onclick="selDiff(1)" id="d1">Seviye 2 <span class="badge">12 hane</span><span class="rew">+3.00 TL / çözüm</span></button>
+        <button class="dbtn"     onclick="selDiff(2)" id="d2">Seviye 3 <span class="badge">20 hane</span><span class="rew">+12.00 TL / çözüm</span></button>
+        <button class="dbtn"     onclick="selDiff(3)" id="d3">Seviye 4 <span class="badge">100.000 hane</span><span class="rew">+25.00 TL / çözüm</span></button>
+        <button class="dbtn"     onclick="selDiff(4)" id="d4">Seviye 5 <span class="badge">100.000.000 hane</span><span class="rew">+80.00 TL / çözüm</span></button>
+      </div>
+      <div class="panel" style="margin-top:11px;">
+        <div class="ptitle">Aktif Şifre</div>
+        <div style="background:#000;border:1px solid var(--green3);border-radius:4px;padding:9px;font-family:var(--fm2);font-size:12px;margin-bottom:9px;">
+          <div style="color:var(--text3);font-size:10px;margin-bottom:3px;">Önizleme (maskelenmiş):</div>
+          <div style="color:var(--amber);letter-spacing:2px;word-break:break-all;font-size:13px;min-height:18px;" id="pw-prev">— şifre üretilmedi —</div>
+        </div>
+        <button class="btn ok" style="width:100%;" onclick="genTarget()">🎲 Yeni Şifre Üret</button>
+        <div style="margin-top:7px;font-size:11px;color:var(--text3);line-height:1.5;" id="pw-status">Zorluk seç → Şifre üret → Algoritma yaz → Başlat</div>
+      </div>
+      <div class="panel" style="margin-top:11px;">
+        <div class="ptitle">Frekans Analizi</div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px;"><code style="color:var(--green2)">get_freq(pos)</code> ile kullan.</div>
+        <div style="font-family:var(--fm2);font-size:10px;color:var(--text3);background:#000;border:1px solid var(--border);border-radius:3px;padding:6px 8px;max-height:130px;overflow-y:auto;line-height:1.9;" id="freq-tbl">Henüz çözüm yok.</div>
+      </div>
+    </div>
+    <!-- ORTA -->
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div class="panel">
+        <div class="ptitle">Python Algoritma Editörü</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:7px;line-height:1.5;">
+          Komutlar: <code style="color:var(--green2)">attempt · get_hint · binary_search · get_freq · skip_tried · mark_tried · load_lib · save_file · append_file · log</code>
+        </div>
+        <div class="ew">
+          <div class="eh">
+            <div class="ed" style="background:#ff5f57;"></div>
+            <div class="ed" style="background:#ffbd2e;"></div>
+            <div class="ed" style="background:#28ca41;"></div>
+            <span style="font-size:10px;color:var(--text3);margin-left:5px;font-family:var(--fm2);">algorithm.py</span>
+            <span style="margin-left:auto;font-size:10px;font-family:var(--fm2);color:var(--text3);" id="char-cnt">0 kr</span>
+          </div>
+          <textarea class="algo-editor" id="editor" spellcheck="false" placeholder="# Algoritmanı buraya yaz...
+# Ornek:
+# def crack(n):
+#     return ''.join(str(binary_search(i)) for i in range(n))"></textarea>
+          <div class="errbar" id="errbar">⚠ —</div>
+        </div>
+        <div style="display:flex;gap:7px;align-items:center;margin-top:9px;flex-wrap:wrap;">
+          <button class="btn ok"     id="start-btn" onclick="startCrack()">▶ Başlat</button>
+          <button class="btn danger" id="stop-btn"  onclick="stopCrack()" disabled>■ Durdur</button>
+          <button class="btn" onclick="clearLog()" style="font-size:11px;padding:6px 9px;">🗑 Log</button>
+          <button class="btn" onclick="valCode()"  style="font-size:11px;padding:6px 9px;">✓ Doğrula</button>
+          <span style="font-size:11px;color:var(--text3);" id="run-st">Hazır</span>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ptitle">İlerleme</div>
+        <div style="background:#000;border:1px solid var(--border);border-radius:4px;padding:11px;">
+          <div style="display:flex;justify-content:space-between;font-family:var(--fm2);font-size:11px;color:var(--text3);">
+            <span id="att-lbl">0 deneme</span><span id="spd-lbl">0/sn</span><span id="ela-lbl">0.0s</span>
+          </div>
+          <div class="pbar-out"><div class="pbar-in" id="pbar"></div></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--fm2);font-size:10px;color:var(--text3);">
+            <span id="pct-lbl">%0.00000</span><span id="eta-lbl">ETA: —</span>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ptitle">Mevcut Deneme</div>
+        <div style="background:#000;border:1px solid var(--border);border-radius:3px;padding:7px;font-family:var(--fm2);font-size:11px;color:var(--green2);word-break:break-all;min-height:32px;max-height:70px;overflow:hidden;" id="cur-att">—</div>
+        <div style="display:flex;gap:14px;margin-top:5px;font-size:11px;">
+          <span style="color:var(--text3);">Eşleşen: <span style="color:var(--green);font-family:var(--fm2);" id="match-lbl">—</span></span>
+          <span style="color:var(--text3);">Atlanan: <span style="color:var(--amber);font-family:var(--fm2);" id="skip-lbl">0</span></span>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ptitle">Konsol</div>
+        <div class="log-area" id="log"></div>
+      </div>
+    </div>
+    <!-- SAĞ -->
+    <div>
+      <div class="panel">
+        <div class="ptitle">İstatistikler</div>
+        <div class="srow"><span class="sl">Toplam Kazanç</span><span class="sv a" id="st-tl">0.00 TL</span></div>
+        <div class="srow"><span class="sl">Oturum</span><span class="sv g" id="st-ses">0.00 TL</span></div>
+        <div class="srow"><span class="sl">Çözülen</span><span class="sv" id="st-sol">0</span></div>
+        <div class="srow"><span class="sl">Top. Deneme</span><span class="sv" id="st-att">0</span></div>
+        <div class="srow"><span class="sl">En Hızlı</span><span class="sv" id="st-fast">—</span></div>
+        <div class="srow"><span class="sl">Hız Çarpanı</span><span class="sv a" id="st-mult">1.00x</span></div>
+      </div>
+      <div class="panel" style="margin-top:11px;">
+        <div class="ptitle">Son Çözümler</div>
+        <div id="recent" style="font-size:11px;color:var(--text2);">Henüz yok.</div>
+      </div>
+      <div class="panel" style="margin-top:11px;">
+        <div class="ptitle">Algoritma Raporu</div>
+        <div style="font-size:11px;color:var(--text3);line-height:2;">
+          <div>Çalıştırma: <span style="color:var(--text);font-family:var(--fm2);" id="rp-runs">0</span></div>
+          <div>Ort. süre: <span style="color:var(--text);font-family:var(--fm2);" id="rp-avg">—</span></div>
+          <div>Algo tipi: <span style="color:var(--blue);font-family:var(--fm2);" id="rp-type">—</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MAĞAZA ═══ -->
+<div id="sec-store" class="sec">
+  <div class="stitle">EĞİTİM MAĞAZASI</div>
+  <div class="ssub">Bakiye: <span style="color:var(--amber);font-family:var(--fm2);" id="store-tl">0.00</span> TL</div>
+  <div class="sgrid" id="store-grid"></div>
+</div>
+
+<!-- ═══ DONANIM ═══ -->
+<div id="sec-hw" class="sec">
+  <div class="stitle">DONANIM YÜKSELTMELERİ</div>
+  <div class="ssub">Parçaları yükselt, hızı artır. Her yükseltme kalıcı kaydedilir.</div>
+  <div class="panel" style="margin-bottom:13px;">
+    <div class="ptitle">Sistem Hızı</div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div><div style="font-family:var(--ft);font-size:26px;color:var(--green);font-weight:900;" id="hw-mult">1.00x</div><div style="font-size:10px;color:var(--text3);">çarpan</div></div>
+      <div style="flex:1;">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:3px;" id="hw-desc">Temel sistem</div>
+        <div class="pbar-out"><div class="pbar-in" id="hw-bar" style="width:2%;"></div></div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px;">Maks ~50x</div>
+      </div>
+    </div>
+  </div>
+  <div class="hwgrid" id="hw-grid"></div>
+</div>
+
+<!-- ═══ GELİŞMİŞ DONANIM ═══ -->
+<div id="sec-advhw" class="sec">
+  <div class="stitle">🔬 GELİŞMİŞ DONANIM</div>
+  <div class="ssub">Tüm temel donanım max. Özel bileşenlerle daha da hızlan. Teklifler her 12 saatte yenilenir.</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:14px;">
+    <div class="panel"><div class="ptitle">TOPLAM ÇARPAN</div><div style="font-family:var(--ft);font-size:24px;color:var(--green);font-weight:900;" id="adv-mult">—</div></div>
+    <div class="panel"><div class="ptitle">SONRAKİ TEKLİF</div><div style="font-family:var(--fm2);font-size:16px;color:var(--amber);" id="adv-timer">—</div></div>
+    <div class="panel"><div class="ptitle">ALINAN</div><div style="font-family:var(--fm2);font-size:16px;color:var(--blue);" id="adv-owned-cnt">0</div></div>
+  </div>
+  <div class="ahwgrid" id="ahw-grid"></div>
+</div>
+
+<!-- ═══ KOMUTLAR ═══ -->
+<div id="sec-cmd" class="sec">
+  <div class="stitle">KOMUT REHBERİ</div>
+  <div class="ssub">Eğitim 6 satın alınmadan kilitlidir.</div>
+  <div id="cmd-locked" style="background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:28px;text-align:center;">
+    <div style="font-size:34px;margin-bottom:9px;">🔒</div>
+    <div style="font-family:var(--ft);font-size:13px;color:var(--text2);margin-bottom:6px;">Eğitim 6 Gerekli</div>
+    <button class="btn" style="margin-top:12px;" onclick="showTab('store')">Mağazaya Git</button>
+  </div>
+  <div id="cmd-content" style="display:none;">
+    <div class="panel" style="margin-bottom:13px;">
+      <div class="ptitle">Temel Komutlar</div>
+      <table class="ctbl">
+        <tr><th>Komut</th><th>Dönüş</th><th>Açıklama</th></tr>
+        <tr><td><span class="cm">attempt(s)</span></td><td><span class="cm" style="color:var(--amber)">bool</span></td><td class="cd">Şifre denemesi. Doğruysa True.<br><span class="cx">if attempt("123456"): return "123456"</span></td></tr>
+        <tr><td><span class="cm">get_hint(pos)</span></td><td><span class="cm" style="color:var(--amber)">"low"/"high"</span></td><td class="cd">Pos. hane 0-4 → "low", 5-9 → "high".<br><span class="cx">h = get_hint(0)</span></td></tr>
+        <tr><td><span class="cm">binary_search(pos)</span></td><td><span class="cm" style="color:var(--amber)">int</span></td><td class="cd">O pozisyondaki rakamı max 4 denemede bulur.<br><span class="cx">d = binary_search(2)</span></td></tr>
+        <tr><td><span class="cm">get_freq(pos)</span></td><td><span class="cm" style="color:var(--amber)">list</span></td><td class="cd">Geçmiş veriden en olası rakam sırası.<br><span class="cx">freq = get_freq(0)</span></td></tr>
+        <tr><td><span class="cm">skip_tried(s)</span></td><td><span class="cm" style="color:var(--amber)">bool</span></td><td class="cd">Daha önce denendiyse True (atla).<br><span class="cx">if skip_tried(g): continue</span></td></tr>
+        <tr><td><span class="cm">mark_tried(s)</span></td><td><span class="cm" style="color:var(--amber)">None</span></td><td class="cd">Şifreyi denendi olarak işaretle.<br><span class="cx">mark_tried(guess)</span></td></tr>
+        <tr><td><span class="cm">get_tried_count()</span></td><td><span class="cm" style="color:var(--amber)">int</span></td><td class="cd">Toplam deneme sayısı.<br><span class="cx">n = get_tried_count()</span></td></tr>
+        <tr><td><span class="cm">log(msg)</span></td><td><span class="cm" style="color:var(--amber)">None</span></td><td class="cd">Konsola mesaj yaz.<br><span class="cx">log("pos " + str(pos) + " tamam")</span></td></tr>
+        <tr><td><span class="cm">get_length()</span></td><td><span class="cm" style="color:var(--amber)">int</span></td><td class="cd">Şifre uzunluğu.<br><span class="cx">n = get_length()</span></td></tr>
+      </table>
+    </div>
+    <div class="panel" style="margin-bottom:13px;">
+      <div class="ptitle">Dosya Komutları</div>
+      <table class="ctbl">
+        <tr><th>Komut</th><th>Dönüş</th><th>Açıklama</th></tr>
+        <tr><td><span class="cm">save_file(isim, içerik)</span></td><td><span class="cm" style="color:var(--amber)">None</span></td><td class="cd">Depoya kaydet.<br><span class="cx">save_file("log", "123\n456")</span></td></tr>
+        <tr><td><span class="cm">append_file(isim, satır)</span></td><td><span class="cm" style="color:var(--amber)">None</span></td><td class="cd">Dosyaya satır ekle.<br><span class="cx">append_file("bulunanlar", pw)</span></td></tr>
+        <tr><td><span class="cm">read_file(isim)</span></td><td><span class="cm" style="color:var(--amber)">list</span></td><td class="cd">Dosyayı satır listesi olarak oku.<br><span class="cx">lines = read_file("log")</span></td></tr>
+        <tr><td><span class="cm">count(isim)</span></td><td><span class="cm" style="color:var(--amber)">int</span></td><td class="cd">Dosyadaki satır sayısı.<br><span class="cx">if count("tekrar") > 10: open_folder("tekrar")</span></td></tr>
+        <tr><td><span class="cm">open_folder(isim)</span></td><td><span class="cm" style="color:var(--amber)">None</span></td><td class="cd">Depo sekmesinde dosyayı aç.<br><span class="cx">open_folder("sonuclar")</span></td></tr>
+        <tr><td><span class="cm">clear_file(isim)</span></td><td><span class="cm" style="color:var(--amber)">None</span></td><td class="cd">Dosya içeriğini temizle.<br><span class="cx">clear_file("gecici")</span></td></tr>
+        <tr><td><span class="cm">delete_file(isim)</span></td><td><span class="cm" style="color:var(--amber)">None</span></td><td class="cd">Dosyayı sil.<br><span class="cx">delete_file("eski")</span></td></tr>
+      </table>
+    </div>
+    <div class="panel" style="margin-bottom:13px;">
+      <div class="ptitle">Kütüphane Komutları</div>
+      <table class="ctbl">
+        <tr><th>Komut</th><th>Dönüş</th><th>Açıklama</th></tr>
+        <tr><td><span class="cm">load_lib(isim)</span></td><td><span class="cm" style="color:var(--amber)">list</span></td><td class="cd">Kütüphaneyi yükle.<br><span class="cx">pws = load_lib("6hane")</span></td></tr>
+        <tr><td><span class="cm">search_lib(isim, s)</span></td><td><span class="cm" style="color:var(--amber)">bool</span></td><td class="cd">Kütüphanede ara.<br><span class="cx">if search_lib("common", g): ...</span></td></tr>
+        <tr><td><span class="cm">lib_size(isim)</span></td><td><span class="cm" style="color:var(--amber)">int</span></td><td class="cd">Kütüphane boyutu.<br><span class="cx">n = lib_size("liste")</span></td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="ptitle">Örnek Algoritmalar</div>
+      <table class="ctbl">
+        <tr><th>Teknik</th><th>Hız</th><th>Kod</th></tr>
+        <tr><td><span class="cm">Kaba Kuvvet</span></td><td style="color:var(--red);font-family:var(--fm2);font-size:11px;">O(10^n)</td><td class="cd"><span class="cx">for i in range(10**n): attempt(str(i).zfill(n))</span></td></tr>
+        <tr><td><span class="cm">İkili Arama</span></td><td style="color:var(--green);font-family:var(--fm2);font-size:11px;">O(n×4)</td><td class="cd"><span class="cx">''.join(str(binary_search(i)) for i in range(n))</span></td></tr>
+        <tr><td><span class="cm">Frekans+Hint</span></td><td style="color:var(--green);font-family:var(--fm2);font-size:11px;">O(n×2)</td><td class="cd"><span class="cx">hint=get_hint(p); [d for d in get_freq(p) if ok(d,hint)]</span></td></tr>
+        <tr><td><span class="cm">Kütüphane</span></td><td style="color:var(--amber);font-family:var(--fm2);font-size:11px;">O(k)</td><td class="cd"><span class="cx">for pw in load_lib("liste"): if attempt(pw): return pw</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SIRALAMA ═══ -->
+<div id="sec-lb" class="sec">
+  <div class="stitle">🏆 SIRALAMA</div>
+  <div class="ssub" id="lb-msg">Bağlantı bekleniyor...</div>
+  <div id="lb-offline" style="display:none;background:rgba(255,85,85,.08);border:1px solid var(--red);border-radius:6px;padding:14px;margin-bottom:14px;font-size:13px;color:var(--red);text-align:center;">📡 İnternet yok — sıralama görüntülenemiyor.</div>
+  <div class="lbcat" id="lb-cats">
+    <button class="dbtn sel" style="width:auto;padding:7px 14px;" onclick="selLB('tl')"       id="lbc-tl">💰 En Çok TL</button>
+    <button class="dbtn"     style="width:auto;padding:7px 14px;" onclick="selLB('solved')"   id="lbc-solved">🔓 En Çok Çözüm</button>
+    <button class="dbtn"     style="width:auto;padding:7px 14px;" onclick="selLB('fastest')"  id="lbc-fastest">⚡ En Hızlı</button>
+    <button class="dbtn"     style="width:auto;padding:7px 14px;" onclick="selLB('mult')"     id="lbc-mult">🚀 En Yüksek Çarpan</button>
+    <button class="dbtn"     style="width:auto;padding:7px 14px;" onclick="selLB('lvl1')"     id="lbc-lvl1">Seviye 1 Hızı</button>
+    <button class="dbtn"     style="width:auto;padding:7px 14px;" onclick="selLB('lvl5')"     id="lbc-lvl5">Seviye 5 Hızı</button>
+  </div>
+  <div class="panel">
+    <div class="ptitle" id="lb-title">EN ÇOK TL</div>
+    <div id="lb-loading" style="text-align:center;padding:20px;color:var(--text3);font-family:var(--fm2);font-size:12px;">Yükleniyor...</div>
+    <div id="lb-list"></div>
+  </div>
+  <div class="panel" style="margin-top:12px;">
+    <div class="ptitle">SENİN SIRAN</div>
+    <div id="lb-myrank" style="font-family:var(--fm2);font-size:13px;color:var(--text2);padding:6px 0;"></div>
+  </div>
+</div>
+
+<!-- ═══ KÜTÜPHANe ═══ -->
+<div id="sec-lib" class="sec">
+  <div class="stitle">📖 KÜTÜPHANELERİM</div>
+  <div class="ssub">Şifre listelerini sakla. Algoritmanda <code style="color:var(--green2)">load_lib("isim")</code> ile yükle.</div>
+  <div style="display:flex;gap:8px;margin-bottom:13px;flex-wrap:wrap;">
+    <input id="lib-name-inp" style="background:#000;border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--fm2);font-size:13px;padding:7px 12px;outline:none;width:200px;" placeholder="kütüphane adı...">
+    <button class="btn ok" onclick="createLib()">+ Yeni</button>
+    <button class="btn"    onclick="genLibSeq()">🔢 Sıralı Üret</button>
+    <button class="btn"    onclick="genLibFreq()">📊 Frekans'tan</button>
+  </div>
+  <div class="libgrid">
+    <div class="panel">
+      <div class="ptitle">KÜTÜPHANELERİM</div>
+      <div id="lib-list"></div>
+      <div style="margin-top:7px;font-size:11px;color:var(--text3);">Toplam: <span style="color:var(--text);font-family:var(--fm2);" id="lib-cnt">0</span></div>
+    </div>
+    <div>
+      <div class="panel" id="lib-editor" style="display:none;">
+        <div class="ptitle" id="lib-ed-title">DÜZENLE</div>
+        <textarea class="libta" id="lib-ta" placeholder="000000&#10;000001&#10;..."></textarea>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+          <button class="btn ok"     onclick="saveLib()">💾 Kaydet</button>
+          <button class="btn"        onclick="sortLib()">↕ Sırala</button>
+          <button class="btn"        onclick="dedupeLib()">✂ Tekrar Kaldır</button>
+          <button class="btn blue"   onclick="exportLib()">⬇ İndir</button>
+          <button class="btn danger" onclick="deleteLib()">🗑 Sil</button>
+        </div>
+        <div style="font-family:var(--fm2);font-size:10px;color:var(--text3);margin-top:5px;" id="lib-stats"></div>
+      </div>
+      <div class="panel" id="lib-empty-p">
+        <div style="text-align:center;padding:28px;color:var(--text3);">
+          <div style="font-size:28px;margin-bottom:8px;">📖</div>
+          <div style="font-size:13px;">Sol taraftan seç veya yeni oluştur.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DEPO ═══ -->
+<div id="sec-depot" class="sec">
+  <div class="stitle">🗄️ DEPO</div>
+  <div class="ssub"><code style="color:var(--green2)">save_file(isim, içerik)</code> ile oluşturulan dosyalar burada.</div>
+  <div style="display:flex;gap:8px;margin-bottom:13px;">
+    <button class="btn"    onclick="renderDepot()">🔄 Yenile</button>
+    <button class="btn danger" onclick="clearDepot()">🗑 Tümünü Temizle</button>
+  </div>
+  <div id="depot-empty" style="display:none;background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:28px;text-align:center;color:var(--text3);">
+    <div style="font-size:28px;margin-bottom:8px;">🗄️</div>
+    <div>Henüz dosya yok.</div>
+  </div>
+  <div class="dgrid" id="depot-grid"></div>
+  <div id="depot-view" style="display:none;margin-top:14px;">
+    <div class="panel">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;">
+        <div class="ptitle" id="dv-title" style="margin-bottom:0;">DOSYA</div>
+        <button class="btn" style="margin-left:auto;font-size:11px;padding:5px 10px;" onclick="document.getElementById('depot-view').style.display='none'">✕</button>
+        <button class="btn blue" style="font-size:11px;padding:5px 10px;" onclick="dlDepotCur()">⬇</button>
+      </div>
+      <div style="background:#000;border:1px solid var(--border);border-radius:4px;padding:11px;font-family:var(--fm2);font-size:11px;color:var(--text2);max-height:400px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;" id="dv-content"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+// CONSTANTS
+// ════════════════════════════════════════════
+const APP_VER = '1.5.0';
+const NETLIFY_URL = 'https://thealgorithm.netlify.app';
+const JBIN_KEY = '$2a$10$FIhaB9Tp6/0lTHEEcXoqbeDWpn2nYMjhzXQagyx6kGMLVYxOCFvEq';
+const JBIN_BIN = '6a278c5ff5f4af5e29cf454d';
+const JBIN_BASE = 'https://api.jsonbin.io/v3';
+
+const DIFF = [
+  {name:'Seviye 1', len:6,         reward:0.50,  spd:500, label:'6 hane'},
+  {name:'Seviye 2', len:12,        reward:3.00,  spd:320, label:'12 hane'},
+  {name:'Seviye 3', len:20,        reward:12.00, spd:200, label:'20 hane'},
+  {name:'Seviye 4', len:100000,    reward:25.00, spd:60,  label:'100K hane'},
+  {name:'Seviye 5', len:100000000, reward:80.00, spd:15,  label:'100M hane'},
+];
+const HW = [
+  {id:'cpu',  name:'İşlemci (CPU)',     desc:'Temel hesaplama', max:10, cost:5,  mpl:0.35},
+  {id:'ram',  name:'Bellek (RAM)',      desc:'Paralel işlem',   max:10, cost:4,  mpl:0.28},
+  {id:'gpu',  name:'Ekran Kartı (GPU)', desc:'Matris hesaplama',max:10, cost:9,  mpl:0.45},
+  {id:'cool', name:'Soğutma',          desc:'Sürekli çalışma', max:5,  cost:6,  mpl:0.20},
+  {id:'ssd',  name:'SSD',              desc:'Veri erişim hızı',max:5,  cost:3,  mpl:0.12},
+  {id:'net',  name:'Ağ (Network)',     desc:'Bulut paraleli',  max:5,  cost:7,  mpl:0.18},
+];
+const ADV_POOL = [
+  {id:'xeon',   brand:'Intel',    name:'Xeon W9-3595X',    boost:1.8, base:120, cat:'cpu'},
+  {id:'epyc',   brand:'AMD',      name:'EPYC 9754',        boost:2.1, base:150, cat:'cpu'},
+  {id:'h200',   brand:'NVIDIA',   name:'H200 SXM',         boost:3.5, base:280, cat:'gpu'},
+  {id:'a100',   brand:'NVIDIA',   name:'A100 80GB',        boost:2.8, base:220, cat:'gpu'},
+  {id:'ddr6',   brand:'Samsung',  name:'DDR6 128GB ECC',   boost:1.4, base:80,  cat:'ram'},
+  {id:'hbm3',   brand:'SK Hynix', name:'HBM3 Stack 64GB',  boost:1.6, base:95,  cat:'ram'},
+  {id:'optane', brand:'Intel',    name:'Optane P5920',     boost:1.3, base:60,  cat:'storage'},
+  {id:'ib400',  brand:'Mellanox', name:'InfiniBand 400Gb', boost:1.5, base:110, cat:'net'},
+  {id:'liq360', brand:'Corsair',  name:'iCUE 360 Elite',   boost:1.2, base:40,  cat:'cooling'},
+  {id:'tpu4',   brand:'Google',   name:'TPU v4 Pod',       boost:4.0, base:350, cat:'gpu'},
+  {id:'wafer',  brand:'TSMC',     name:'2nm Wafer Chip',   boost:5.0, base:500, cat:'cpu'},
+];
+const STORE = [
+  {id:'edu1',title:'Eğitim 1 — Giriş',            desc:'Python temelleri, döngüler, ilk kaba kuvvet algoritması.',  price:0,  pages:12},
+  {id:'edu2',title:'Eğitim 2 — Hane Bazlı Arama', desc:'O(10^n) → O(n×10). Her haneyi bağımsız bul.',              price:10, pages:18},
+  {id:'edu3',title:'Eğitim 3 — Hinting',          desc:'get_hint() ile arama uzayını yarıya indir.',               price:18, pages:22},
+  {id:'edu4',title:'Eğitim 4 — İkili Arama',      desc:'binary_search() ile her haneyi 4 denemede bul.',           price:28, pages:28},
+  {id:'edu5',title:'Eğitim 5 — İleri Algoritmalar',desc:'Frekans, skip/mark_tried, hibrit stratejiler.',           price:44, pages:35},
+  {id:'edu6',title:'Eğitim 6 — Tam Komut Rehberi',desc:'Tüm API, hata kodları, optimizasyon. Diğerlerinin toplamı.',price:100,pages:62},
+];
+const LB_CATS = {
+  tl:     {label:'EN ÇOK TL',         field:'total_tl',     hi:true,  fmt:function(v){return (v||0).toFixed(2)+' TL';}},
+  solved: {label:'EN ÇOK ÇÖZÜM',      field:'solved',       hi:true,  fmt:function(v){return (v||0)+' çözüm';}},
+  fastest:{label:'EN HIZLI',          field:'fastest',      hi:false, fmt:function(v){return (!v||v>=9999)?'—':v.toFixed(2)+'s';}},
+  mult:   {label:'EN YÜKSEK ÇARPAN',  field:'multiplier',   hi:true,  fmt:function(v){return (v||1).toFixed(2)+'x';}},
+  lvl1:   {label:'SEVİYE 1 EN HIZLI', field:'lvl1_fastest', hi:false, fmt:function(v){return (!v||v>=9999)?'—':v.toFixed(2)+'s';}},
+  lvl5:   {label:'SEVİYE 5 EN HIZLI', field:'lvl5_fastest', hi:false, fmt:function(v){return (!v||v>=9999)?'—':v.toFixed(2)+'s';}},
+};
+
+// ════════════════════════════════════════════
+// AUDIO STATE — top-level vars to avoid TDZ issues
+// ════════════════════════════════════════════
+var sfxEnabled = true;
+var bgmEnabled = false;
+var bgmVolume  = 0.3;
+var audioCtx   = null;
+var bgmGain    = null;
+var bgmPlaying = false;
+var bgmNodes   = {};
+
+// ════════════════════════════════════════════
+// GAME STATE
+// ════════════════════════════════════════════
+var S = {
+  tl:0, sesTl:0, solved:0, totalAtt:0, fastestTime:null,
+  diff:0, target:null, cracking:false, crackIv:null,
+  attCount:0, crackStart:null, recentSolves:[],
+  hw:{cpu:1,ram:1,gpu:1,cool:1,ssd:1,net:1},
+  owned:{}, algo:'', freqData:{},
+  perfRuns:0, perfTotalT:0,
+  username:'', theme:'', dlDone:false,
+  advHW:{owned:{}, offers:[], lastRefresh:0},
+};
+
+function loadS() {
+  try {
+    var raw = localStorage.getItem('ta_v5');
+    if (!raw) return;
+    var p = JSON.parse(raw);
+    var keys = ['tl','sesTl','solved','totalAtt','fastestTime','diff','recentSolves',
+                  'hw','owned','algo','freqData','perfRuns','perfTotalT',
+                  'username','theme','dlDone','advHW',
+                  'sfxEnabled','bgmEnabled','bgmVolume'];
+    keys.forEach(function(k){ if (p[k] !== undefined) S[k] = p[k]; });
+    if (p.sfxEnabled !== undefined) sfxEnabled = p.sfxEnabled;
+    if (p.bgmEnabled !== undefined) bgmEnabled = p.bgmEnabled;
+    if (p.bgmVolume  !== undefined) bgmVolume  = p.bgmVolume;
+  } catch(e) {}
+}
+function saveS() {
+  try {
+    var o = {};
+    for (var k in S) o[k] = S[k];
+    o.cracking = false; o.crackIv = null; o.target = null;
+    o.sfxEnabled = sfxEnabled; o.bgmEnabled = bgmEnabled; o.bgmVolume = bgmVolume;
+    localStorage.setItem('ta_v5', JSON.stringify(o));
+  } catch(e) {}
+}
+
+var LIBS = {};
+var DEPOT = {};
+function loadLibs()  { try { LIBS  = JSON.parse(localStorage.getItem('ta_libs')  || '{}'); } catch(e){} }
+function saveLibs()  { try { localStorage.setItem('ta_libs',  JSON.stringify(LIBS));  } catch(e){} }
+function loadDepot() { try { DEPOT = JSON.parse(localStorage.getItem('ta_depot') || '{}'); } catch(e){} }
+function saveDepot() { try { localStorage.setItem('ta_depot', JSON.stringify(DEPOT)); } catch(e){} }
+
+// ════════════════════════════════════════════
+// MULTIPLIER
+// ════════════════════════════════════════════
+function getMult() {
+  var m = 1;
+  HW.forEach(function(it){ m += ((S.hw[it.id]||1)-1) * it.mpl; });
+  if (S.advHW && S.advHW.owned) {
+    Object.keys(S.advHW.owned).forEach(function(id){
+      var item = ADV_POOL.find(function(x){return x.id===id;});
+      if (item) m *= item.boost;
+    });
+  }
+  return parseFloat(m.toFixed(3));
+}
+
+// ════════════════════════════════════════════
+// TAB NAVIGATION
+// ════════════════════════════════════════════
+function showTab(name) {
+  var secs = document.querySelectorAll('.sec');
+  for (var i=0;i<secs.length;i++) secs[i].classList.remove('active');
+  var tabs = document.querySelectorAll('.tab');
+  for (var i=0;i<tabs.length;i++) tabs[i].classList.remove('active');
+  var sec = document.getElementById('sec-' + name);
+  if (sec) sec.classList.add('active');
+  var tab = document.getElementById('t-' + name);
+  if (tab) tab.classList.add('active');
+  if (name === 'store')  renderStore();
+  if (name === 'hw')     renderHW();
+  if (name === 'advhw')  renderAdvHW();
+  if (name === 'cmd')    renderCmd();
+  if (name === 'lb')     initLB();
+  if (name === 'lib')    renderLibList();
+  if (name === 'depot')  renderDepot();
+  sfx_click();
+}
+
+// ════════════════════════════════════════════
+// TL DISPLAY
+// ════════════════════════════════════════════
+function updTL() {
+  document.getElementById('tl-disp').textContent = S.tl.toFixed(2);
+  var el = document.getElementById('store-tl'); if(el) el.textContent = S.tl.toFixed(2);
+  document.getElementById('st-tl').textContent  = S.tl.toFixed(2) + ' TL';
+  document.getElementById('st-ses').textContent = S.sesTl.toFixed(2) + ' TL';
+}
+function addTL(amt) {
+  S.tl += amt; S.sesTl += amt; updTL();
+  var fl = document.createElement('div');
+  fl.className = 'tlf'; fl.textContent = '+' + amt.toFixed(3) + ' TL';
+  fl.style.right = '20px'; fl.style.top = '58px';
+  document.body.appendChild(fl);
+  setTimeout(function(){ fl.remove(); }, 1100);
+  document.dispatchEvent(new Event('ta:tl'));
+}
+
+// ════════════════════════════════════════════
+// DIFFICULTY
+// ════════════════════════════════════════════
+function selDiff(i) {
+  S.diff = i;
+  var btns = document.querySelectorAll('.dbtn');
+  for (var j=0;j<btns.length;j++) {
+    // Only toggle the 5 difficulty buttons (d0..d4), not LB category buttons
+    if (btns[j].id && btns[j].id[0]==='d' && btns[j].id.length===2) {
+      btns[j].classList.toggle('sel', btns[j].id === 'd'+i);
+    }
+  }
+  saveS();
+  sfx_click();
+}
+
+
+// ════════════════════════════════════════════
+// TARGET GENERATION
+// ════════════════════════════════════════════
+function genTarget() {
+  stopCrack();
+  var d = DIFF[S.diff];
+  if (d.len <= 20) {
+    var pw = '';
+    for (var i=0; i<d.len; i++) pw += Math.floor(Math.random()*10);
+    S.target = pw;
+    var m = pw[0] + '•'.repeat(pw.length-2) + pw[pw.length-1];
+    document.getElementById('pw-prev').textContent = m + ' (' + d.len + ' hane)';
+  } else {
+    S.target = '__L__' + d.len + '__' + Math.floor(Math.random()*1e9);
+    document.getElementById('pw-prev').textContent = '[' + d.len + ' haneli şifre]';
+  }
+  document.getElementById('pw-status').textContent = '✅ Şifre hazır. Algoritmayı yaz → Başlat';
+  clearLog(); log('[SYS] ' + d.name + ' | ' + d.len + ' hane | Şifre üretildi.', 'i');
+  resetProg(); saveS(); sfx_click();
+}
+function resetProg() {
+  document.getElementById('pbar').style.width = '0%';
+  document.getElementById('pct-lbl').textContent = '%0.00000';
+  document.getElementById('eta-lbl').textContent = 'ETA: —';
+  document.getElementById('att-lbl').textContent = '0 deneme';
+  document.getElementById('spd-lbl').textContent = '0/sn';
+  document.getElementById('ela-lbl').textContent = '0.0s';
+  document.getElementById('cur-att').textContent = '—';
+  document.getElementById('match-lbl').textContent = '—';
+  document.getElementById('skip-lbl').textContent = '0';
+}
+
+// ════════════════════════════════════════════
+// LOG
+// ════════════════════════════════════════════
+function log(msg, type) {
+  var area = document.getElementById('log');
+  var line = document.createElement('div');
+  line.className = 'll' + (type ? ' '+type : '');
+  var t = new Date();
+  var pad = function(x){ return String(x).padStart(2,'0'); };
+  line.textContent = '['+pad(t.getHours())+':'+pad(t.getMinutes())+':'+pad(t.getSeconds())+'] ' + msg;
+  area.appendChild(line);
+  while (area.children.length > 300) area.removeChild(area.firstChild);
+  area.scrollTop = area.scrollHeight;
+}
+function clearLog() { document.getElementById('log').innerHTML = ''; }
+
+// ════════════════════════════════════════════
+// CODE VALIDATION
+// ════════════════════════════════════════════
+function showErr(msg) {
+  var bar = document.getElementById('errbar');
+  bar.textContent = '⚠ ' + msg;
+  bar.classList.add('show');
+  log('[ERR] ' + msg, 'e');
+  sfx_error();
+}
+var PY_TOKENS = ['def ','for ','while ','if ','elif ','else:','return','import','from ',
+    'in ','not ','and ','or ','True','False','None','pass','break','continue',
+    'attempt','get_hint','binary_search','get_freq','skip_tried','mark_tried',
+    'get_tried_count','load_lib','save_file','append_file','read_file','count(',
+    'open_folder','clear_file','delete_file','log(','get_length','range(','str(',
+    'int(','len(','print(','#','"','\'',' ','[',']','(',')','{','}',
+    '+','-','*','/','=','<','>','!','0','1','2','3','4','5','6','7','8','9','.','_'];
+
+function valCode(showOK) {
+  var code = document.getElementById('editor').value.trim();
+  var bar = document.getElementById('errbar');
+  bar.classList.remove('show');
+  if (!code) { showErr('Editör boş!'); return false; }
+  if (!code.includes('def crack(')) { showErr('ERR_NO_CRACK_FN — def crack(n): fonksiyonu gerekli'); return false; }
+  var lines = code.split('\n');
+  for (var i=0; i<lines.length; i++) {
+    var l = lines[i].trim();
+    if (!l || l[0]==='#') continue;
+    var hasPy = false;
+    for (var j=0;j<PY_TOKENS.length;j++) { if (l.indexOf(PY_TOKENS[j]) !== -1) { hasPy = true; break; } }
+    var pureAlpha = /^[a-zA-Z]{4,}\s*$/.test(l);
+    if (pureAlpha && !hasPy) {
+      showErr('Satır ' + (i+1) + ': Geçersiz kod -> "' + l + '"'); return false;
+    }
+  }
+  if (showOK !== false) log('[VALID] Kod gecerli', 'i');
+  return true;
+}
+
+
+// ════════════════════════════════════════════
+// CODE RUNNER — actually executes user's crack fn in JS sandbox
+// ════════════════════════════════════════════
+function runPostSolve(solvedPW) {
+  // Execute post-solve side effects from user code
+  // (append_file, save_file, count, open_folder, log etc)
+  var code = document.getElementById('editor').value;
+  
+  // Build sandbox with real API
+  var sandbox = {
+    attempt: function(s) { return String(s) === solvedPW; },
+    get_hint: function(pos) { var d=parseInt(solvedPW[pos]||'0'); return d<=4?'low':'high'; },
+    binary_search: function(pos) { return parseInt(solvedPW[pos]||'0'); },
+    get_freq: function(pos) {
+      var key=S.diff+'_'+pos, counts=S.freqData[key]||[0,0,0,0,0,0,0,0,0,0];
+      return [0,1,2,3,4,5,6,7,8,9].sort(function(a,b){return counts[b]-counts[a];});
+    },
+    get_length: function() { return DIFF[S.diff].len; },
+    skip_tried: function(s) { return false; },
+    mark_tried: function(s) {},
+    get_tried_count: function() { return S.attCount; },
+    // FILE API — these actually work
+    save_file:    function(name, content) { _sf(name, content); },
+    append_file:  function(name, line)    { _af(name, line); },
+    read_file:    function(name)          { return _rf(name); },
+    file_exists:  function(name)          { return _fe(name); },
+    clear_file:   function(name)          { _clf(name); },
+    delete_file:  function(name)          { _df(name); },
+    open_folder:  function(name)          { _of(name); },
+    count:        function(name)          { return _cf(name); },
+    count_file:   function(name)          { return _cf(name); },
+    // LIBRARY API — actually work
+    load_lib:     function(name) { return (LIBS[name]||[]).slice(); },
+    search_lib:   function(name, s) { return (LIBS[name]||[]).indexOf(String(s)) !== -1; },
+    lib_size:     function(name) { return (LIBS[name]||[]).length; },
+    save_to_lib:  function(name, s) { if(!LIBS[name]) LIBS[name]=[]; LIBS[name].push(String(s)); saveLibs(); },
+    // UTILITY
+    log:          function(msg) { log('[CODE] ' + String(msg), 'i'); },
+    range: function(a, b, step) {
+      if (b === undefined) { b = a; a = 0; }
+      if (step === undefined) step = 1;
+      var result = [];
+      for (var i=a; step>0?i<b:i>b; i+=step) result.push(i);
+      return result;
+    },
+    str: function(x) { return String(x); },
+    int: function(x) { return parseInt(x); },
+    len: function(x) { return x ? x.length : 0; },
+    print: function(msg) { log('[PRINT] ' + String(msg), ''); },
+    zip: function(a,b) { var r=[]; for(var i=0;i<Math.min(a.length,b.length);i++) r.push([a[i],b[i]]); return r; },
+    enumerate: function(arr) { return arr.map(function(v,i){return [i,v];}); },
+    sorted: function(arr) { return arr.slice().sort(); },
+    min: Math.min, max: Math.max, abs: Math.abs, round: Math.round,
+    True: true, False: false, None: null,
+  };
+
+  try {
+    // Transpile Python -> JS (simplified)
+    var js = transpilePy(code);
+    // Run in sandbox
+    var keys = Object.keys(sandbox);
+    var vals = keys.map(function(k){ return sandbox[k]; });
+    var fn = new Function(keys, js + '\nif(typeof crack==="function") { try { crack(' + DIFF[S.diff].len + '); } catch(e){} } return null;');
+    fn.apply(null, vals);
+  } catch(e) {
+    // Silent — simulation already ran, just log
+    log('[CODE] Post-solve: ' + e.message, 'w');
+  }
+}
+
+function transpilePy(code) {
+  var js = code;
+  // def func(args): -> function func(args) {
+  js = js.replace(/^(\s*)def\s+(\w+)\s*\(([^)]*)\)\s*:/gm, '$1function $2($3) {');
+  // for x in range(a,b): -> for(var x of _range(a,b)) {
+  js = js.replace(/^(\s*)for\s+(\w+)\s+in\s+range\(([^)]+)\)\s*:/gm, function(m,sp,v,args){
+    return sp+'var _r_'+v+'=range('+args+');for(var _i_'+v+'=0;_i_'+v+'<_r_'+v+'.length;_i_'+v+'++){var '+v+'=_r_'+v+'[_i_'+v+'];';
+  });
+  // for x in y: -> for(var _i=0;_i<y.length;_i++){var x=y[_i];
+  js = js.replace(/^(\s*)for\s+(\w+)\s+in\s+([^\s:][^:]*?)\s*:/gm, function(m,sp,v,iter){
+    return sp+'var _arr_'+v+'='+iter+';for(var _i_'+v+'=0;_i_'+v+'<_arr_'+v+'.length;_i_'+v+'++){var '+v+'=_arr_'+v+'[_i_'+v+'];';
+  });
+  // while cond: -> while(cond) {
+  js = js.replace(/^(\s*)while\s+(.+?)\s*:/gm, '$1while($2) {');
+  // if cond: -> if(cond) {
+  js = js.replace(/^(\s*)if\s+(.+?)\s*:/gm, '$1if($2) {');
+  // elif -> } else if
+  js = js.replace(/^(\s*)elif\s+(.+?)\s*:/gm, '$1} else if($2) {');
+  // else: -> } else {
+  js = js.replace(/^(\s*)else\s*:/gm, '$1} else {');
+  // Python True/False/None
+  js = js.replace(/\bTrue\b/g,'true').replace(/\bFalse\b/g,'false').replace(/\bNone\b/g,'null');
+  // not x -> !x
+  js = js.replace(/\bnot\s+(\w)/g,'!$1');
+  // and/or -> &&/||
+  js = js.replace(/\band\b/g,'&&').replace(/\bor\b/g,'||');
+  // .append( -> .push(
+  js = js.replace(/\.append\(/g,'.push(');
+  // zfill -> padStart
+  js = js.replace(/\.zfill\((\d+)\)/g,'.padStart($1,"0")');
+  // ''.join(x) -> x.join('')  (simplified)
+  js = js.replace(/''\s*\.\s*join\s*\(([^)]+)\)/g,'($1).join("")');
+  // f-strings f"...{x}..." -> template literal
+  js = js.replace(/f"([^"]*)"/g, function(m,s){ return '`'+s.replace(/\{([^}]+)\}/g,'${$1}')+'`'; });
+  js = js.replace(/f'([^']*)'/g, function(m,s){ return '`'+s.replace(/\{([^}]+)\}/g,'${$1}')+'`'; });
+  // Add closing braces by indent tracking
+  var lines = js.split('\n');
+  var result = [];
+  var indentStack = [0];
+  for (var i=0; i<lines.length; i++) {
+    var line = lines[i];
+    var stripped = line.replace(/^\s+/, '');
+    if (!stripped) { result.push(''); continue; }
+    var indent = line.length - stripped.length;
+    while (indentStack.length > 1 && indent <= indentStack[indentStack.length-1]) {
+      indentStack.pop();
+      result.push(' '.repeat(Math.max(0,indentStack[indentStack.length-1])) + '}');
+    }
+    result.push(line);
+    if (line.trimEnd().endsWith('{')) indentStack.push(indent + 2);
+  }
+  while (indentStack.length > 1) { indentStack.pop(); result.push('}'); }
+  return result.join('\n');
+}
+
+// ════════════════════════════════════════════
+// CRACK ENGINE
+// ════════════════════════════════════════════
+var _triedSet = new Set();
+var _expectedT = 5;
+
+function startCrack() {
+  if (!S.target) { alert('Once Yeni Sifre Uret!'); return; }
+  if (S.cracking) return;
+  if (!valCode(false)) return;
+
+  var code = document.getElementById('editor').value;
+  S.algo = code; saveS();
+
+  var hasBin  = code.indexOf('binary_search') !== -1;
+  var hasHint = code.indexOf('get_hint') !== -1;
+  var hasFreq = code.indexOf('get_freq') !== -1;
+  var hasSkip = code.indexOf('skip_tried') !== -1;
+  var hasLib  = code.indexOf('load_lib') !== -1;
+
+  var type = 'kaba_kuvvet';
+  if (hasBin && hasFreq && hasHint) type = 'hibrit';
+  else if (hasBin)  type = 'ikili_arama';
+  else if (hasHint && hasFreq) type = 'hint_freq';
+  else if (hasHint) type = 'hint_bazli';
+  else if (hasFreq) type = 'freq_bazli';
+  else if (hasLib)  type = 'kutuphane';
+  document.getElementById('rp-type').textContent = type;
+
+  var eff = 1.0;
+  if (hasBin)  eff *= 0.025;
+  if (hasHint) eff *= 0.40;
+  if (hasFreq) eff *= 0.65;
+  if (hasSkip || hasLib) eff *= 0.80;
+
+  var mult = getMult();
+  var baseT = [1.8, 5, 12, 55, 280];
+  _expectedT = Math.max(1.2, baseT[S.diff] * eff / mult);
+  _triedSet = new Set();
+
+  S.cracking = true;
+  S.attCount = 0;
+  S.crackStart = Date.now();
+
+  document.getElementById('start-btn').disabled = true;
+  document.getElementById('stop-btn').disabled  = false;
+  document.getElementById('run-st').textContent  = 'Calisiyor...';
+  document.getElementById('errbar').classList.remove('show');
+
+  var d = DIFF[S.diff];
+  log('[START] ' + d.name + ' | ' + type + ' | ~' + _expectedT.toFixed(1) + 's | Carpan: ' + mult + 'x', '');
+  sfx_start();
+
+  var isLarge = d.len > 20;
+  var attPerTick = Math.max(1, Math.floor(d.spd * mult));
+
+  S.crackIv = setInterval(function() {
+    if (!S.cracking) { clearInterval(S.crackIv); return; }
+    var elapsed = (Date.now() - S.crackStart) / 1000;
+    S.attCount += attPerTick;
+    S.totalAtt  += attPerTick;
+
+    var prog = Math.min(99.9, elapsed / _expectedT * 100);
+    document.getElementById('pbar').style.width = prog.toFixed(2) + '%';
+    document.getElementById('pct-lbl').textContent = isLarge
+      ? 'sim %' + prog.toFixed(3)
+      : '%' + Math.min(99.999, S.attCount / Math.pow(10, d.len) * 100).toFixed(5);
+    var rem = Math.max(0, _expectedT - elapsed);
+    document.getElementById('eta-lbl').textContent = rem > 0.5 ? 'ETA: ' + rem.toFixed(1) + 's' : 'ETA: cok yakinda';
+    var spd = Math.floor(S.attCount / Math.max(elapsed, 0.01));
+    document.getElementById('att-lbl').textContent = numFmt(S.attCount) + ' deneme';
+    document.getElementById('spd-lbl').textContent = numFmt(spd) + '/sn';
+    document.getElementById('ela-lbl').textContent = elapsed.toFixed(1) + 's';
+    document.getElementById('st-att').textContent  = numFmt(S.totalAtt);
+    document.getElementById('skip-lbl').textContent = numFmt(_triedSet.size);
+
+    var showLen = Math.min(d.len, 32);
+    var fake = '';
+    if (!isLarge && S.target) {
+      for (var k=0; k<showLen; k++)
+        fake += Math.random() < (prog/100)*0.92 ? S.target[k] : String(Math.floor(Math.random()*10));
+      if (d.len > 32) fake += '...';
+      document.getElementById('cur-att').textContent  = fake;
+      document.getElementById('match-lbl').textContent = cntMatch(fake, S.target.substring(0,showLen)) + '/' + d.len;
+    } else {
+      var arr = [];
+      for (var k=0;k<showLen;k++) arr.push(Math.floor(Math.random()*10));
+      fake = arr.join('') + (d.len>32?'...':'');
+      document.getElementById('cur-att').textContent  = fake;
+      document.getElementById('match-lbl').textContent = '(buyuk)';
+    }
+
+    if (Math.floor(elapsed) > Math.floor(elapsed - 0.1) && elapsed > 0.5) sfx_tick();
+
+    var p = elapsed >= _expectedT ? 0.95 : (elapsed / _expectedT) * 0.18;
+    if (Math.random() < p * 0.01 && elapsed >= _expectedT * 0.35) onSolve(elapsed);
+
+  }, 100);
+}
+
+function stopCrack() {
+  if (S.crackIv) clearInterval(S.crackIv);
+  S.cracking = false;
+  document.getElementById('start-btn').disabled = false;
+  document.getElementById('stop-btn').disabled  = true;
+  document.getElementById('run-st').textContent = 'Durduruldu';
+  if (S.attCount > 0) log('[STOP] ' + numFmt(S.attCount) + ' denemede durduruldu.', 'w');
+}
+
+function onSolve(elapsed) {
+  clearInterval(S.crackIv);
+  S.cracking = false;
+  var d = DIFF[S.diff];
+  document.getElementById('pbar').style.width = '100%';
+  document.getElementById('pct-lbl').textContent = '%100.00000';
+  document.getElementById('run-st').textContent = 'Bulundu!';
+  document.getElementById('start-btn').disabled = false;
+  document.getElementById('stop-btn').disabled  = true;
+
+  addTL(d.reward);
+  S.solved++; document.getElementById('st-sol').textContent = S.solved;
+  if (!S.fastestTime || elapsed < S.fastestTime) {
+    S.fastestTime = elapsed;
+    document.getElementById('st-fast').textContent = elapsed.toFixed(2) + 's';
+  }
+  S.perfRuns++; S.perfTotalT += elapsed;
+  document.getElementById('rp-runs').textContent = S.perfRuns;
+  document.getElementById('rp-avg').textContent  = (S.perfTotalT/S.perfRuns).toFixed(2) + 's';
+
+  var pw = S.target;
+  if (pw && pw.indexOf('__L__')!==0 && pw.length <= 20) {
+    for (var i=0; i<pw.length; i++) {
+      var key = S.diff + '_' + i;
+      if (!S.freqData[key]) S.freqData[key] = [0,0,0,0,0,0,0,0,0,0];
+      S.freqData[key][parseInt(pw[i])]++;
+    }
+  }
+
+  var dpw = (pw && pw.indexOf('__L__')!==0) ? pw : '['+d.len+' haneli]';
+  S.recentSolves.unshift({pw:dpw.substring(0,22), time:elapsed, reward:d.reward, diff:d.name});
+  if (S.recentSolves.length > 8) S.recentSolves.pop();
+  renderRecent(); renderFreq(); saveS();
+
+  log('[OK] ' + d.name + ' | ' + elapsed.toFixed(2) + 's | +' + d.reward.toFixed(3) + ' TL | ' + numFmt(S.attCount) + ' deneme', 's');
+  sfx_solve();
+  runPostSolve(dpw !== '['+d.len+' haneli]' ? dpw : '');
+  document.dispatchEvent(new Event('ta:solved'));
+
+  document.getElementById('ov-pw').textContent   = dpw.substring(0,60);
+  document.getElementById('ov-rew').textContent  = '+' + d.reward.toFixed(3) + ' TL';
+  document.getElementById('ov-time').textContent = elapsed.toFixed(2) + 's  |  ' + numFmt(S.attCount) + ' deneme';
+  document.getElementById('solveov').classList.add('show');
+}
+
+
+// ════════════════════════════════════════════
+// HARDWARE
+// ════════════════════════════════════════════
+function renderHW() {
+  HW.forEach(function(it){ if (!S.hw[it.id]) S.hw[it.id] = 1; });
+  var allMaxed = HW.every(function(it){ return (S.hw[it.id]||1) >= it.max; });
+  if (allMaxed) {
+    var btn = document.getElementById('t-hw');
+    if (btn && !btn.dataset.switched) {
+      btn.dataset.switched = '1';
+      btn.textContent = '🔬 Gelişmiş';
+      btn.setAttribute('onclick', "showTab('advhw')");
+      btn.id = 't-advhw';
+    }
+    showTab('advhw');
+    return;
+  }
+  var mult = getMult();
+  document.getElementById('hw-mult').textContent = mult.toFixed(2) + 'x';
+  document.getElementById('hw-bar').style.width  = Math.min(mult/50*100,100) + '%';
+  document.getElementById('hw-desc').textContent = mult<2?'Temel':mult<5?'Iyi':mult<12?'Guclu':mult<25?'Super':'GOD MODE';
+  document.getElementById('st-mult').textContent = mult.toFixed(2) + 'x';
+
+  var grid = document.getElementById('hw-grid');
+  grid.innerHTML = '';
+  HW.forEach(function(item) {
+    var lv   = S.hw[item.id] || 1;
+    var maxed = lv >= item.max;
+    var cost  = parseFloat((item.cost * Math.pow(1.8, lv-1)).toFixed(2));
+    var pct   = ((lv-1)/(item.max-1)*100) || 0;
+
+    var card = document.createElement('div');
+    card.className = 'hwcard';
+
+    var title = document.createElement('div');
+    title.className = 'hwcard-t';
+    title.textContent = item.name;
+    card.appendChild(title);
+
+    var desc = document.createElement('div');
+    desc.style.cssText = 'font-size:11px;color:var(--text3);margin-bottom:7px;';
+    desc.textContent = item.desc;
+    card.appendChild(desc);
+
+    var lvlRow = document.createElement('div');
+    lvlRow.className = 'hwlvl';
+    var lvlA = document.createElement('span'); lvlA.textContent = 'Seviye ' + lv + '/' + item.max;
+    var lvlB = document.createElement('span'); lvlB.textContent = '+' + (item.mpl*100).toFixed(0) + '%/lv';
+    lvlRow.appendChild(lvlA); lvlRow.appendChild(lvlB);
+    card.appendChild(lvlRow);
+
+    var bar = document.createElement('div'); bar.className = 'hwbar';
+    var fill = document.createElement('div'); fill.className = 'hwbar-f'; fill.style.width = pct + '%';
+    bar.appendChild(fill); card.appendChild(bar);
+
+    var btn = document.createElement('button');
+    btn.style.cssText = 'margin-top:7px;width:100%;border-radius:4px;font-family:var(--fm);font-weight:700;font-size:11px;padding:6px;transition:all .2s;';
+    if (maxed) {
+      btn.style.background = 'rgba(85,187,255,.07)';
+      btn.style.border = '1px solid #334455';
+      btn.style.color = 'var(--text3)';
+      btn.style.cursor = 'not-allowed';
+      btn.textContent = 'MAX';
+      btn.disabled = true;
+    } else {
+      btn.style.background = 'rgba(85,187,255,.07)';
+      btn.style.border = '1px solid #1a3d5a';
+      btn.style.color = '#88ccff';
+      btn.style.cursor = 'pointer';
+      btn.textContent = '▲ Yukselt';
+      btn.addEventListener('click', (function(id, c){
+        return function(){ upgradeHW(id, c); };
+      })(item.id, cost));
+    }
+    card.appendChild(btn);
+
+    var costDiv = document.createElement('div');
+    costDiv.style.cssText = 'font-family:var(--fm2);font-size:10px;color:var(--amber);margin-top:3px;text-align:center;';
+    costDiv.textContent = maxed ? 'Maksimum seviye' : 'Maliyet: ' + cost.toFixed(2) + ' TL';
+    card.appendChild(costDiv);
+
+    grid.appendChild(card);
+  });
+}
+
+function upgradeHW(id, cost) {
+  if (S.tl < cost) { alert('Yetersiz TL! Gerekli: ' + cost.toFixed(2) + ' TL'); return; }
+  S.tl -= cost; updTL();
+  S.hw[id] = (S.hw[id]||1) + 1;
+  saveS(); renderHW(); sfx_upgrade();
+  log('[HW] ' + id + ' -> Seviye ' + S.hw[id] + ' | Carpan: ' + getMult() + 'x', 's');
+}
+
+// ════════════════════════════════════════════
+// ADVANCED HARDWARE
+// ════════════════════════════════════════════
+var ADV_REFRESH = 12 * 3600 * 1000;
+function initAdvHW() {
+  if (!S.advHW) S.advHW = {owned:{}, offers:[], lastRefresh:0};
+  refreshAdvOffers(false);
+}
+function refreshAdvOffers(force) {
+  var now = Date.now();
+  if (!force && S.advHW.offers.length && (now - S.advHW.lastRefresh) < ADV_REFRESH) return;
+  var avail = ADV_POOL.filter(function(x){ return !S.advHW.owned[x.id]; });
+  var shuffled = avail.slice().sort(function(){ return Math.random()-.5; });
+  S.advHW.offers = shuffled.slice(0,3).map(function(x){
+    return Object.assign({}, x, {price: Math.round(x.base*(0.8+Math.random()*.4))});
+  });
+  S.advHW.lastRefresh = now;
+  saveS();
+}
+function renderAdvHW() {
+  initAdvHW();
+  var mult = getMult();
+  document.getElementById('adv-mult').textContent     = mult.toFixed(2) + 'x';
+  document.getElementById('adv-owned-cnt').textContent = Object.keys(S.advHW.owned).length;
+  var rem = ADV_REFRESH - (Date.now() - S.advHW.lastRefresh);
+  var h = Math.floor(rem/3600000), m = Math.floor((rem%3600000)/60000);
+  document.getElementById('adv-timer').textContent = h + 's ' + m + 'dk';
+
+  var grid = document.getElementById('ahw-grid');
+  grid.innerHTML = '';
+  var catCols = {cpu:'#ff8866',gpu:'#66aaff',ram:'#88ff66',storage:'#ffcc44',net:'#cc88ff',cooling:'#44ddff'};
+
+  S.advHW.offers.forEach(function(item, i) {
+    var owned  = !!S.advHW.owned[item.id];
+    var canBuy = !owned && S.tl >= item.price;
+    var card   = document.createElement('div');
+    card.className = 'ahwcard' + (owned?' sold':'');
+
+    var hdr = document.createElement('div');
+    hdr.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:6px;';
+    var catBadge = document.createElement('span');
+    catBadge.style.cssText = 'font-size:10px;background:rgba(85,187,255,.1);border:1px solid #55bbff;border-radius:3px;padding:2px 7px;font-family:var(--fm2);';
+    catBadge.style.color = catCols[item.cat]||'#55bbff';
+    catBadge.textContent = item.cat.toUpperCase();
+    hdr.appendChild(catBadge);
+    if (owned) {
+      var ob = document.createElement('span');
+      ob.style.cssText = 'margin-left:auto;font-size:10px;color:var(--green);font-family:var(--fm2);';
+      ob.textContent = 'ALINDI';
+      hdr.appendChild(ob);
+    }
+    card.appendChild(hdr);
+
+    var brand = document.createElement('div');
+    brand.style.cssText = 'font-size:11px;color:var(--text3);margin-bottom:3px;';
+    brand.textContent = item.brand;
+    card.appendChild(brand);
+
+    var name = document.createElement('div');
+    name.style.cssText = 'font-family:var(--ft);font-size:11px;color:var(--blue);letter-spacing:1px;margin-bottom:7px;';
+    name.textContent = item.name;
+    card.appendChild(name);
+
+    var boost = document.createElement('div');
+    boost.style.cssText = 'font-family:var(--fm2);font-size:13px;color:var(--green);margin-bottom:9px;';
+    boost.textContent = 'x' + item.boost.toFixed(1) + ' hiz carpani';
+    card.appendChild(boost);
+
+    var price = document.createElement('div');
+    price.style.cssText = 'font-family:var(--fm2);font-size:15px;color:var(--amber);';
+    price.textContent = owned ? '-' : item.price + ' TL';
+    card.appendChild(price);
+
+    if (!owned) {
+      var btn = document.createElement('button');
+      btn.className = 'btn' + (canBuy ? ' blue' : '');
+      btn.style.cssText = 'width:100%;margin-top:10px;';
+      btn.textContent = canBuy ? '▲ Satin Al' : 'Yetersiz TL (' + item.price + ')';
+      btn.disabled = !canBuy;
+      if (canBuy) {
+        btn.addEventListener('click', (function(id,price,idx){
+          return function(){ buyAdvHW(id,price,idx); };
+        })(item.id, item.price, i));
+      }
+      card.appendChild(btn);
+    }
+    grid.appendChild(card);
+  });
+
+  var ownedList = Object.keys(S.advHW.owned).map(function(id){ return ADV_POOL.find(function(x){return x.id===id;}); }).filter(Boolean);
+  if (ownedList.length) {
+    var sec = document.createElement('div');
+    sec.style.cssText = 'grid-column:1/-1;margin-top:14px;';
+    var title = document.createElement('div');
+    title.className = 'ptitle'; title.textContent = 'KURULU DONANIM';
+    sec.appendChild(title);
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;';
+    ownedList.forEach(function(it){
+      var chip = document.createElement('div');
+      chip.style.cssText = 'background:rgba(0,255,136,.05);border:1px solid var(--green3);border-radius:4px;padding:5px 11px;font-size:12px;';
+      var b = document.createElement('span'); b.style.cssText='color:var(--text3);font-size:10px;'; b.textContent = it.brand + ' ';
+      var n = document.createElement('span'); n.textContent = it.name + ' ';
+      var x = document.createElement('span'); x.style.cssText='color:var(--green);font-family:var(--fm2);'; x.textContent = 'x' + it.boost;
+      chip.appendChild(b); chip.appendChild(n); chip.appendChild(x);
+      row.appendChild(chip);
+    });
+    sec.appendChild(row); grid.appendChild(sec);
+  }
+}
+function buyAdvHW(id, price, offerIdx) {
+  if (S.tl < price) { alert('Yetersiz TL!'); return; }
+  S.tl -= price; updTL();
+  S.advHW.owned[id] = {boughtAt: Date.now(), price: price};
+  S.advHW.offers.splice(offerIdx, 1);
+  var avail = ADV_POOL.filter(function(x){ return !S.advHW.owned[x.id] && !S.advHW.offers.find(function(o){return o.id===x.id;}); });
+  if (avail.length) {
+    var ni = avail[Math.floor(Math.random()*avail.length)];
+    S.advHW.offers.splice(offerIdx, 0, Object.assign({}, ni, {price: Math.round(ni.base*(0.8+Math.random()*.4))}));
+  }
+  saveS(); renderAdvHW(); sfx_upgrade();
+  log('[ADV HW] ' + id + ' alindi | Yeni carpan: ' + getMult() + 'x', 's');
+}
+
+// ════════════════════════════════════════════
+// STORE
+// ════════════════════════════════════════════
+function renderStore() {
+  var el = document.getElementById('store-tl');
+  if (el) el.textContent = S.tl.toFixed(2);
+  var grid = document.getElementById('store-grid');
+  grid.innerHTML = '';
+  STORE.forEach(function(item, i) {
+    var owned = !!S.owned[item.id];
+    var card = document.createElement('div');
+    card.className = 'scard' + (owned?' owned':'');
+
+    var num = document.createElement('div'); num.className='scard-n'; num.textContent = i+1;
+    card.appendChild(num);
+    var t = document.createElement('div'); t.className='scard-t'; t.textContent = item.title;
+    card.appendChild(t);
+    var d = document.createElement('div'); d.className='scard-d';
+    d.innerHTML = item.desc + '<br><span style="font-size:10px;color:var(--text3)">' + item.pages + ' sayfa</span>';
+    card.appendChild(d);
+    var p = document.createElement('div'); p.className='scard-p' + (item.price===0?' free':'');
+    p.textContent = item.price===0?'UCRETSIZ':item.price+' TL';
+    card.appendChild(p);
+
+    if (owned) {
+      var badge = document.createElement('span'); badge.className='owned-badge'; badge.textContent='ALINDI';
+      var bwrap = document.createElement('div'); bwrap.style.cssText='margin-top:8px;'; bwrap.appendChild(badge);
+      card.appendChild(bwrap);
+      var row2 = document.createElement('div'); row2.style.cssText='display:flex;gap:6px;margin-top:7px;';
+      var v = document.createElement('button'); v.className='btn'; v.style.cssText='flex:1;font-size:11px;padding:6px;'; v.textContent='Goruntule';
+      v.addEventListener('click', (function(id){return function(){openPDF(id);};})(item.id));
+      var dl = document.createElement('button'); dl.className='btn blue'; dl.style.cssText='flex:1;font-size:11px;padding:6px;'; dl.textContent='Indir';
+      dl.addEventListener('click', (function(id){return function(){dlPDFById(id);};})(item.id));
+      row2.appendChild(v); row2.appendChild(dl); card.appendChild(row2);
+    } else {
+      var btn = document.createElement('button'); btn.className='btn ok'; btn.style.cssText='width:100%;margin-top:10px;';
+      btn.textContent = item.price===0 ? 'Ucretsiz Al' : 'Satin Al - ' + item.price + ' TL';
+      btn.addEventListener('click', (function(id){return function(){buyStore(id);};})(item.id));
+      card.appendChild(btn);
+    }
+    grid.appendChild(card);
+  });
+}
+function buyStore(id) {
+  var item = STORE.find(function(x){return x.id===id;}); if (!item) return;
+  if (item.price > 0 && S.tl < item.price) { alert('Yetersiz TL! Gerekli: ' + item.price); return; }
+  if (item.price > 0) { S.tl -= item.price; updTL(); }
+  S.owned[id] = true; saveS(); renderStore(); sfx_buy();
+  log('[STORE] ' + item.title + ' satin alindi.', 's');
+}
+
+
+// ════════════════════════════════════════════
+// LEADERBOARD (JSONBin)
+// ════════════════════════════════════════════
+var isOnline = navigator.onLine;
+var lbCat = 'tl';
+var lbData = {};
+var lbLastFetch = 0;
+var lbTimer = null;
+
+function setOnline(v) {
+  isOnline = v;
+  var ind = document.getElementById('online-ind');
+  if (!ind) return;
+  ind.textContent = v ? 'Cevrimici' : 'Cevrimdisi';
+  ind.style.color = v ? 'var(--green)' : 'var(--red)';
+  ind.style.borderColor = v ? 'var(--green3)' : 'var(--red)';
+}
+window.addEventListener('online',  function(){ setOnline(true);  pushStats(); });
+window.addEventListener('offline', function(){ setOnline(false); });
+
+function fetchLB() {
+  if (!isOnline) return Promise.resolve(null);
+  return fetch(JBIN_BASE + '/b/' + JBIN_BIN + '/latest', {
+    headers: {'X-Master-Key': JBIN_KEY, 'X-Bin-Meta': 'false'}
+  }).then(function(r){
+    if (!r.ok) return null;
+    return r.json();
+  }).then(function(d){
+    if (!d) return null;
+    lbData = d.leaderboard || {};
+    lbLastFetch = Date.now();
+    setOnline(true);
+    return lbData;
+  }).catch(function(){ setOnline(false); return null; });
+}
+
+var pushDebounce = null;
+function pushStats() {
+  if (!isOnline || !S.username) return;
+  clearTimeout(pushDebounce);
+  pushDebounce = setTimeout(function() {
+    fetch(JBIN_BASE + '/b/' + JBIN_BIN + '/latest', {
+      headers: {'X-Master-Key': JBIN_KEY, 'X-Bin-Meta': 'false'}
+    }).then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        if (!d) return;
+        var lb = d.leaderboard || {};
+        var uid = 'u_' + S.username.replace(/[^a-zA-Z0-9]/g,'_').substring(0,20);
+        lb[uid] = {
+          username: S.username,
+          total_tl: parseFloat(S.tl.toFixed(2)),
+          solved: S.solved,
+          fastest: S.fastestTime || 9999,
+          multiplier: parseFloat(getMult().toFixed(2)),
+          lvl1_fastest: getLvlFast(0),
+          lvl5_fastest: getLvlFast(4),
+          updated: Date.now()
+        };
+        return fetch(JBIN_BASE + '/b/' + JBIN_BIN, {
+          method: 'PUT',
+          headers: {'Content-Type':'application/json','X-Master-Key':JBIN_KEY},
+          body: JSON.stringify({leaderboard: lb})
+        }).then(function(){ lbData = lb; });
+      }).catch(function(){});
+  }, 2500);
+}
+function getLvlFast(di) {
+  var dname = DIFF[di].name;
+  var r = S.recentSolves.filter(function(s){ return s.diff===dname; });
+  if (!r.length) return 9999;
+  var min = 9999;
+  r.forEach(function(s){ if (s.time < min) min = s.time; });
+  return min;
+}
+
+function selLB(cat) {
+  lbCat = cat;
+  var btns = document.querySelectorAll('[id^="lbc-"]');
+  for (var i=0;i<btns.length;i++) btns[i].classList.remove('sel');
+  var btn = document.getElementById('lbc-' + cat);
+  if (btn) btn.classList.add('sel');
+  loadLB(cat);
+  sfx_click();
+}
+
+function loadLB(cat) {
+  var offline = document.getElementById('lb-offline');
+  var loading = document.getElementById('lb-loading');
+  var list    = document.getElementById('lb-list');
+  if (!isOnline) {
+    if (offline) offline.style.display = 'block';
+    if (loading) loading.style.display = 'none';
+    if (list) list.innerHTML = '';
+    return;
+  }
+  if (offline) offline.style.display = 'none';
+  if (loading) { loading.style.display = 'block'; loading.textContent = 'Yukleniyor...'; }
+  if (list) list.innerHTML = '';
+
+  var cfg = LB_CATS[cat]; if (!cfg) return;
+  var title = document.getElementById('lb-title');
+  if (title) title.textContent = cfg.label;
+
+  var useCache = (Date.now()-lbLastFetch < 30000 && Object.keys(lbData).length);
+  var p = useCache ? Promise.resolve(lbData) : fetchLB();
+
+  p.then(function(data){
+    if (loading) loading.style.display = 'none';
+    if (!data) {
+      if (list) list.innerHTML = '<div style="padding:16px;color:var(--red);font-size:13px;">Yuklenemedi. Internet baglantisini kontrol et.</div>';
+      return;
+    }
+    var entries = Object.keys(data).map(function(k){ return data[k]; });
+    if (cfg.hi) entries.sort(function(a,b){ return (b[cfg.field]||0) - (a[cfg.field]||0); });
+    else {
+      entries = entries.filter(function(e){ return (e[cfg.field]||9999) < 9999; });
+      entries.sort(function(a,b){ return (a[cfg.field]||9999) - (b[cfg.field]||9999); });
+    }
+
+    if (!entries.length) { if(list) list.innerHTML = '<div style="padding:16px;color:var(--text3);font-size:13px;">Bu kategoride henuz kayit yok.</div>'; 
+      var mrel0 = document.getElementById('lb-myrank');
+      if (mrel0) mrel0.innerHTML = '<span style="color:var(--text3)">Henuz sıralamada yoksun. Oyna!</span>';
+      return; }
+
+    var medals = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+    var myRank = -1;
+    for (var i=0;i<entries.length;i++) if (entries[i].username === S.username) { myRank = i+1; break; }
+
+    if (list) list.innerHTML = entries.slice(0,50).map(function(e,i){
+      var isMe = e.username === S.username;
+      var medal = i<5 ? medals[i] : String(i+1);
+      var nm = isMe
+        ? '<b style="color:var(--green)">' + e.username + '</b>' + (i<5 ? ' <span style="background:rgba(0,255,136,.15);border:1px solid var(--green3);border-radius:3px;padding:1px 5px;font-size:10px;font-family:var(--fm2);color:var(--green)">#'+(i+1)+'</span>' : '')
+        : '<span style="color:var(--text2)">' + e.username + '</span>';
+      return '<div class="lbrow' + (isMe?' me':'') + '">' +
+        '<span style="font-family:var(--fm2);font-size:13px;width:26px;flex-shrink:0;text-align:center">' + medal + '</span>' +
+        '<span style="flex:1;font-size:14px;font-weight:700">' + nm + '</span>' +
+        '<span style="font-family:var(--fm2);font-size:13px;color:var(--amber)">' + cfg.fmt(e[cfg.field]) + '</span>' +
+        '</div>';
+    }).join('');
+
+    var mrel = document.getElementById('lb-myrank');
+    if (mrel) mrel.innerHTML = myRank > 0
+      ? '<span style="color:var(--text3)">Siran:</span> <span style="color:var(--green);font-size:16px">#' + myRank + '</span> <span style="color:var(--text3)">/ ' + entries.length + ' oyuncu</span>'
+      : '<span style="color:var(--text3)">Henuz sıralamada yoksun. Oyna!</span>';
+  });
+}
+
+function initLB() {
+  var offline = document.getElementById('lb-offline');
+  var msg     = document.getElementById('lb-msg');
+  if (offline) offline.style.display = isOnline ? 'none' : 'block';
+  if (msg) msg.textContent = isOnline ? 'Canli siralama - 30s de yenilenir.' : 'Internet baglantisi gerekli.';
+  if (isOnline) {
+    loadLB(lbCat);
+    clearInterval(lbTimer);
+    lbTimer = setInterval(function(){ if(isOnline) loadLB(lbCat); }, 30000);
+  } else {
+    var loading = document.getElementById('lb-loading');
+    if (loading) loading.style.display = 'none';
+  }
+}
+
+// ════════════════════════════════════════════
+// LIBRARY
+// ════════════════════════════════════════════
+var activeLib = null;
+function renderLibList() {
+  var el = document.getElementById('lib-list');
+  var keys = Object.keys(LIBS);
+  document.getElementById('lib-cnt').textContent = keys.length;
+  if (!keys.length) {
+    el.innerHTML = '<div style="padding:10px;font-size:12px;color:var(--text3);text-align:center">Henuz kutuphane yok.</div>';
+    return;
+  }
+  el.innerHTML = '';
+  keys.forEach(function(k) {
+    var div = document.createElement('div');
+    div.className = 'libi' + (k===activeLib?' active':'');
+    div.addEventListener('click', (function(name){ return function(){ openLib(name); }; })(k));
+    var nm = document.createElement('span'); nm.style.cssText='flex:1;font-weight:700'; nm.textContent=k;
+    var cnt = document.createElement('span'); cnt.style.cssText='font-family:var(--fm2);font-size:10px;color:var(--text3)'; cnt.textContent=(LIBS[k]||[]).length;
+    div.appendChild(nm); div.appendChild(cnt);
+    el.appendChild(div);
+  });
+}
+function openLib(name) {
+  activeLib = name;
+  renderLibList();
+  document.getElementById('lib-editor').style.display = 'block';
+  document.getElementById('lib-empty-p').style.display = 'none';
+  document.getElementById('lib-ed-title').textContent = name.toUpperCase();
+  document.getElementById('lib-ta').value = (LIBS[name]||[]).join('\n');
+  updLibStats();
+}
+function updLibStats() {
+  if (!activeLib) return;
+  var lines = LIBS[activeLib]||[];
+  document.getElementById('lib-stats').textContent = lines.length + ' kayit | ' + new Set(lines).size + ' benzersiz';
+}
+function createLib() {
+  var name = document.getElementById('lib-name-inp').value.trim().replace(/[^a-zA-Z0-9_\-çğıöşüÇĞİÖŞÜ]/g,'_');
+  if (!name) { alert('Ad gir!'); return; }
+  if (LIBS[name]) { alert('Bu isim var!'); return; }
+  LIBS[name] = []; saveLibs(); renderLibList(); openLib(name);
+  document.getElementById('lib-name-inp').value = '';
+}
+function saveLib() {
+  if (!activeLib) return;
+  LIBS[activeLib] = document.getElementById('lib-ta').value.split('\n').map(function(l){return l.trim();}).filter(function(l){return l.length>0;});
+  saveLibs(); renderLibList(); updLibStats();
+  log('[LIB] Kaydedildi: ' + activeLib, 's');
+}
+function sortLib() {
+  var ta = document.getElementById('lib-ta');
+  var lines = ta.value.split('\n').map(function(l){return l.trim();}).filter(function(l){return l;});
+  ta.value = Array.from(new Set(lines)).sort().join('\n');
+}
+function dedupeLib() {
+  var ta = document.getElementById('lib-ta');
+  var lines = ta.value.split('\n').map(function(l){return l.trim();}).filter(function(l){return l;});
+  var u = Array.from(new Set(lines));
+  ta.value = u.join('\n');
+  log('[LIB] ' + (lines.length-u.length) + ' tekrar kaldirildi', 'i');
+}
+function exportLib() {
+  if (!activeLib) return;
+  var blob = new Blob([(LIBS[activeLib]||[]).join('\n')], {type:'text/plain'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a'); a.href=url; a.download=activeLib+'.txt'; a.click(); URL.revokeObjectURL(url);
+}
+function deleteLib() {
+  if (!activeLib || !confirm(activeLib + ' silinsin mi?')) return;
+  delete LIBS[activeLib]; activeLib=null; saveLibs(); renderLibList();
+  document.getElementById('lib-editor').style.display = 'none';
+  document.getElementById('lib-empty-p').style.display = 'block';
+}
+function genLibSeq() {
+  if (!activeLib) { alert('Once kutuphane sec!'); return; }
+  var d = DIFF[S.diff]; var len = Math.min(d.len, 6);
+  var lines = []; var max = Math.min(Math.pow(10,len),100000);
+  for(var i=0;i<max;i++) lines.push(String(i).padStart(len,'0'));
+  document.getElementById('lib-ta').value = lines.join('\n');
+  log('[LIB] '+lines.length+' sirali sifre uretildi','i');
+}
+function genLibFreq() {
+  if (!activeLib) { alert('Once kutuphane sec!'); return; }
+  var d=DIFF[S.diff]; if(d.len>20){alert('<=20 hane icin'); return;}
+  var results=[]; var MAX=10000;
+  function build(pos, cur) {
+    if(pos===d.len){results.push(cur);return;} if(results.length>MAX)return;
+    var key=S.diff+'_'+pos; var counts=S.freqData[key]||[0,0,0,0,0,0,0,0,0,0];
+    var sorted=[0,1,2,3,4,5,6,7,8,9].sort(function(a,b){return counts[b]-counts[a];});
+    for(var i=0;i<3;i++) build(pos+1, cur+sorted[i]);
+  }
+  build(0,'');
+  document.getElementById('lib-ta').value=Array.from(new Set(results)).join('\n');
+  log('[LIB] Frekans bazli '+results.length+' aday','i');
+}
+
+// ════════════════════════════════════════════
+// DEPOT
+// ════════════════════════════════════════════
+var _curDepotFile = null;
+function _sf(name, content)  { DEPOT[name]={content:String(content),created:Date.now(),lines:String(content).split('\n').length}; saveDepot(); log('[FILE] Kaydedildi: '+name,'i'); }
+function _af(name, line)     { if(!DEPOT[name]) DEPOT[name]={content:'',created:Date.now(),lines:0}; DEPOT[name].content+=(DEPOT[name].content?'\n':'')+String(line); DEPOT[name].lines=DEPOT[name].content.split('\n').length; saveDepot(); }
+function _rf(name)           { return DEPOT[name]?DEPOT[name].content.split('\n').filter(function(l){return l.length>0;}):[]; }
+function _fe(name)           { return !!DEPOT[name]; }
+function _clf(name)          { if(DEPOT[name]){DEPOT[name].content='';DEPOT[name].lines=0;saveDepot();} }
+function _df(name)           { delete DEPOT[name]; saveDepot(); log('[FILE] Silindi: '+name,'w'); }
+function _cf(name)           { return DEPOT[name]?DEPOT[name].content.split('\n').filter(function(l){return l.length>0;}).length:0; }
+function _of(name)           { showTab('depot'); setTimeout(function(){openDepotFile(name);},200); }
+
+function renderDepot() {
+  var names = Object.keys(DEPOT);
+  var depotEmptyEl = document.getElementById('depot-empty'); if(depotEmptyEl) depotEmptyEl.style.display = names.length ? 'none' : 'block';
+  var grid = document.getElementById('depot-grid');
+  grid.innerHTML = '';
+  names.forEach(function(name) {
+    var f = DEPOT[name];
+    var card = document.createElement('div'); card.className = 'dcard';
+    var title = document.createElement('div'); title.style.cssText='font-family:var(--ft);font-size:11px;color:var(--green);letter-spacing:1px;margin-bottom:4px'; title.textContent=name;
+    var meta = document.createElement('div'); meta.style.cssText='font-size:11px;color:var(--text3);margin-bottom:6px;font-family:var(--fm2)'; meta.textContent = f.lines+' satir | '+(f.content.length/1024).toFixed(2)+' KB';
+    var prev = document.createElement('div'); prev.style.cssText='background:#000;border:1px solid var(--border);border-radius:3px;padding:5px;font-family:var(--fm2);font-size:10px;color:var(--text2);max-height:50px;overflow:hidden;margin-bottom:7px';
+    prev.textContent = f.content.substring(0,100);
+    card.appendChild(title); card.appendChild(meta); card.appendChild(prev);
+    var row = document.createElement('div'); row.style.cssText = 'display:flex;gap:5px;flex-wrap:wrap;';
+    var v = document.createElement('button'); v.className='btn'; v.style.cssText='font-size:11px;padding:4px 8px;'; v.textContent='Goruntule';
+    v.addEventListener('click', (function(n){return function(){openDepotFile(n);};})(name));
+    var dl = document.createElement('button'); dl.className='btn blue'; dl.style.cssText='font-size:11px;padding:4px 8px;'; dl.textContent='Indir';
+    dl.addEventListener('click', (function(n){return function(){dlDepotByName(n);};})(name));
+    var x = document.createElement('button'); x.className='btn danger'; x.style.cssText='font-size:11px;padding:4px 8px;'; x.textContent='Sil';
+    x.addEventListener('click', (function(n){return function(){ if(confirm(n+' silinsin mi?')){_df(n);renderDepot();} };})(name));
+    row.appendChild(v); row.appendChild(dl); row.appendChild(x); card.appendChild(row);
+    grid.appendChild(card);
+  });
+}
+function openDepotFile(name) {
+  if (!DEPOT[name]) return;
+  _curDepotFile = name;
+  document.getElementById('dv-title').textContent = name;
+  document.getElementById('dv-content').textContent = DEPOT[name].content;
+  document.getElementById('depot-view').style.display = 'block';
+}
+function dlDepotCur()      { if(_curDepotFile) dlDepotByName(_curDepotFile); }
+function dlDepotByName(name) {
+  if (!DEPOT[name]) return;
+  var blob = new Blob([DEPOT[name].content], {type:'text/plain'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a'); a.href=url; a.download=name+'.txt'; a.click(); URL.revokeObjectURL(url);
+}
+function clearDepot()  { if(!confirm('Tum depo silinsin mi?'))return; DEPOT={}; saveDepot(); renderDepot(); }
+
+
+// ════════════════════════════════════════════
+// PDF
+// ════════════════════════════════════════════
+var _curPDF = null;
+function openPDF(id) {
+  var item = STORE.find(function(x){return x.id===id;}); if (!item) return;
+  _curPDF = id;
+  document.getElementById('pdf-title').textContent = item.title;
+  document.getElementById('pdf-body').textContent  = getPDFText(id);
+  document.getElementById('pdfov').classList.add('show');
+}
+function dlPDF() { if (_curPDF) dlPDFById(_curPDF); }
+function dlPDFById(id) {
+  var item = STORE.find(function(x){return x.id===id;}); if (!item) return;
+  var html = '<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><title>' + item.title + '</title>' +
+    '<style>body{background:#050e08;color:#c8ffc8;font-family:monospace;font-size:14px;padding:20px;line-height:1.8;max-width:800px;margin:0 auto;}</style></head>' +
+    '<body><h2 style="color:#00ff88">' + item.title + '</h2><pre>' + getPDFText(id).replace(/</g,'&lt;') + '</pre></body></html>';
+  var blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a'); a.href=url; a.download=id+'.html'; a.click();
+  URL.revokeObjectURL(url);
+}
+function getPDFText(id) {
+  var texts = {
+edu1:"TheAlgorithm - Egitim 1: Python Giris\n==========================================\n\n1. DEGISKENLER VE VERI TIPLERI\n  x = 5            # tam sayi (int)\n  pi = 3.14         # ondalik (float)\n  s = 'merhaba'    # metin (str)\n  liste = [1,2,3]  # liste\n\n2. DONGULER\n  for i in range(10):\n      print(i)     # 0-9 arasi yazar\n\n  while x > 0:\n      x -= 1\n\n3. KOSULLAR\n  if x > 5:\n      print('buyuk')\n  elif x == 5:\n      print('tam 5')\n  else:\n      print('kucuk')\n\n4. FONKSIYONLAR\n  def toplam(a, b):\n      return a + b\n\n5. ILK ALGORITMA - KABA KUVVET\n  def crack(n):\n      for i in range(10**n):\n          guess = str(i).zfill(n)\n          if attempt(guess):\n              return guess\n\nNOT: Kaba kuvvet sadece 6 haneli sifreler icin uygundur.",
+
+edu2:"TheAlgorithm - Egitim 2: Hane Bazli Arama\n==========================================\n\nSORUN: Kaba kuvvet 12 hane icin 10^12 deneme!\n\nCOZUM: Her haneyi bagimsiz bul = n x 10 deneme\n  12 hane -> 120 deneme (milyonlarca kez hizli!)\n\n  def crack(n):\n      result = ['0'] * n\n      for pos in range(n):\n          for digit in range(10):\n              test = result[:]\n              test[pos] = str(digit)\n              if attempt(''.join(test)):\n                  result[pos] = str(digit)\n                  break\n      return ''.join(result)\n\nNEDEN CALISIYOR?\nDogru haneyi bulunca o pozisyon sabitlenir,\ndigerleri 0 kalir. Her seferinde tam sifre\ndeniyor ama biz sadece bir haneyi degistiriyoruz.",
+
+edu3:"TheAlgorithm - Egitim 3: Hinting Sistemi\n==========================================\n\nget_hint(pos) -> 'low' veya 'high'\n  'low'  = rakam 0,1,2,3 veya 4\n  'high' = rakam 5,6,7,8 veya 9\n\nHer hane icin 10 degil 5 ihtimal!\n\n  def crack(n):\n      result = ['0'] * n\n      for pos in range(n):\n          hint = get_hint(pos)\n          if hint == 'low':\n              candidates = range(0, 5)\n          else:\n              candidates = range(5, 10)\n          for digit in candidates:\n              test = result[:]\n              test[pos] = str(digit)\n              if attempt(''.join(test)):\n                  result[pos] = str(digit)\n                  break\n      return ''.join(result)\n\nPERFOMANS:\n  Hane bazli: n x 10 deneme\n  Hint bazli: n x 5  deneme (2x hiz!)",
+
+edu4:"TheAlgorithm - Egitim 4: Ikili Arama\n==========================================\n\nbinary_search(pos) -> maksimum 4 denemede sonuc!\n\n  def crack(n):\n      return ''.join(str(binary_search(i)) for i in range(n))\n\nNEDEN MAX 4?\n  0-9 arasi: 4 adimda bulunur (log2(10) = 3.32)\n\nPERFOMANS:\n  Kaba kuvvet: 10^20 (20 hane icin)\n  Hane bazli:  200   deneme\n  Hint bazli:  100   deneme\n  Ikili arama:  80   deneme\n\n100.000 hane:\n  Ikili arama: 400.000 deneme\n  Kaba kuvvet: imkansiz",
+
+edu5:"TheAlgorithm - Egitim 5: Ileri Algoritmalar\n==========================================\n\n1. FREKANS ANALIZI\n  get_freq(pos) -> en sik gorulen rakamlar once\n\n  freq = get_freq(0)  # ornek: [3, 7, 1, 5, ...]\n  # 3 o pozisyonda en sik, 8 en az\n\n2. TEKRAR ONLEME\n  if skip_tried(guess): continue\n  mark_tried(guess)\n  if attempt(guess): return guess\n\n3. HIBRIT (en hizli)\n  def crack(n):\n      result = []\n      for pos in range(n):\n          hint = get_hint(pos)\n          freq = get_freq(pos)\n          lo = 5 if hint == 'high' else 0\n          hi = 9 if hint == 'high' else 4\n          for d in freq:\n              if lo <= d <= hi:\n                  result.append(str(d))\n                  break\n      return ''.join(result)\n\n4. DOSYA KAYDETME\n  append_file('log', solved_pw)\n  if count('log') > 10:\n      open_folder('log')\n\n5. KUTUPHANE KULLANIMI\n  pws = load_lib('6hane_common')\n  for pw in pws:\n      if attempt(pw): return pw",
+
+edu6:"TheAlgorithm - Egitim 6: Tam Komut Rehberi\n==========================================\n\nTUM KOMUTLAR:\n\nTEMEL:\n  attempt(s)           -> bool\n  get_hint(pos)        -> 'low' / 'high'\n  binary_search(pos)   -> int (0-9)\n  get_freq(pos)        -> list[int]\n  skip_tried(s)        -> bool\n  mark_tried(s)        -> None\n  get_tried_count()    -> int\n  get_length()         -> int\n  log(msg)             -> None\n\nDOSYA:\n  save_file(isim, icerik)   -> None\n  append_file(isim, satir)  -> None\n  read_file(isim)           -> list[str]\n  count(isim)               -> int\n  open_folder(isim)         -> None\n  clear_file(isim)          -> None\n  delete_file(isim)         -> None\n\nKUTUPHANE:\n  load_lib(isim)            -> list[str]\n  search_lib(isim, s)       -> bool\n  lib_size(isim)            -> int\n\nEN HIZLI ALGORITMA:\n  def crack(n):\n      return ''.join(str(binary_search(i)) for i in range(n))\n\nEN AKILLI ALGORITMA:\n  def crack(n):\n      result = []\n      for pos in range(n):\n          hint = get_hint(pos)\n          freq = get_freq(pos)\n          lo = 5 if hint == 'high' else 0\n          hi = 9 if hint == 'high' else 4\n          for d in freq:\n              if lo <= d <= hi:\n                  result.append(str(d))\n                  break\n      return ''.join(result)"
+  };
+  return texts[id] || 'Icerik bulunamadi.';
+}
+
+// ════════════════════════════════════════════
+// COMMANDS TAB
+// ════════════════════════════════════════════
+function renderCmd() {
+  var owned = !!S.owned['edu6'];
+  document.getElementById('cmd-locked').style.display  = owned ? 'none' : 'block';
+  document.getElementById('cmd-content').style.display = owned ? 'block' : 'none';
+}
+
+// ════════════════════════════════════════════
+// DISPLAY HELPERS
+// ════════════════════════════════════════════
+function renderRecent() {
+  var el = document.getElementById('recent'); if (!el) return;
+  if (!S.recentSolves.length) { el.textContent = 'Henuz yok.'; return; }
+  el.innerHTML = S.recentSolves.map(function(s){
+    return '<div style="padding:3px 0;border-bottom:1px solid rgba(26,77,46,.25);display:flex;justify-content:space-between;gap:6px">' +
+    '<span style="color:var(--text3);font-size:10px">' + s.diff + '</span>' +
+    '<span style="color:var(--text3);font-family:var(--fm2);font-size:10px">' + s.time.toFixed(1) + 's</span>' +
+    '<span style="color:var(--amber);font-family:var(--fm2);font-size:11px">+' + s.reward.toFixed(3) + ' TL</span></div>';
+  }).join('');
+}
+function renderFreq() {
+  var el = document.getElementById('freq-tbl'); if (!el) return;
+  var d = DIFF[S.diff];
+  if (d.len > 20) { el.textContent = '(Buyuk sifreler icin desteklenmez)'; return; }
+  var html = 'Zorluk: ' + d.name + '\nHane | En sik\n--------------\n';
+  for (var pos=0; pos<Math.min(d.len,8); pos++) {
+    var key = S.diff + '_' + pos;
+    var counts = S.freqData[key] || [0,0,0,0,0,0,0,0,0,0];
+    var sorted = [0,1,2,3,4,5,6,7,8,9].sort(function(a,b){return counts[b]-counts[a];});
+    var top = sorted.slice(0,4).map(function(x){return x+'('+counts[x]+')';}).join(' ');
+    html += '  ' + String(pos).padStart(2,'0') + '   | ' + top + '\n';
+  }
+  if (d.len > 8) html += '  ...  | (' + d.len + ' hane)\n';
+  el.textContent = html;
+}
+function numFmt(n) {
+  n = Math.floor(n);
+  if(n>=1e9) return (n/1e9).toFixed(1)+'B';
+  if(n>=1e6) return (n/1e6).toFixed(1)+'M';
+  if(n>=1e3) return (n/1e3).toFixed(1)+'K';
+  return String(n);
+}
+function cntMatch(a,b) {
+  var c=0;
+  for(var i=0;i<Math.min(a.length,b.length);i++) if(a[i]===b[i]) c++;
+  return c;
+}
+
+// ════════════════════════════════════════════
+// SETTINGS
+// ════════════════════════════════════════════
+function saveUser() {
+  var v = document.getElementById('uinp').value.trim();
+  if (!v || v.length < 2) { document.getElementById('uinp').style.borderColor='var(--red)'; return; }
+  S.username = v; saveS();
+  document.getElementById('umodal').classList.remove('show');
+  document.getElementById('uname-disp').textContent = v;
+  document.getElementById('s-uname').value = v;
+}
+function changeUser() {
+  var v = document.getElementById('s-uname').value.trim();
+  if (!v || v.length < 2) return;
+  S.username = v; saveS();
+  document.getElementById('uname-disp').textContent = v;
+  document.getElementById('spanel').classList.remove('show');
+}
+document.getElementById('uinp').addEventListener('keydown', function(e){ if(e.key==='Enter') saveUser(); });
+function setTheme(t) {
+  document.body.className = t ? 't-' + t : '';
+  S.theme = t; saveS();
+  var btns = document.querySelectorAll('.tsw');
+  for(var i=0;i<btns.length;i++) btns[i].classList.remove('active');
+  var el = document.getElementById('th-' + (t||''));
+  if (el) el.classList.add('active');
+}
+function resetGame() {
+  if (!confirm('Tum kayitlar silinsin mi?')) return;
+  localStorage.removeItem('ta_v5');
+  localStorage.removeItem('ta_libs');
+  localStorage.removeItem('ta_depot');
+  location.reload();
+}
+document.addEventListener('click', function(e){
+  var sp = document.getElementById('spanel');
+  if (sp && sp.classList.contains('show') && !sp.contains(e.target) && !e.target.closest('[onclick*="spanel"]') && e.target.textContent !== '⚙')
+    sp.classList.remove('show');
+});
+
+// ════════════════════════════════════════════
+// VERSION CHECK + DOWNLOAD
+// ════════════════════════════════════════════
+function checkVer() {
+  var stored = localStorage.getItem('ta_ver');
+  if (stored && stored !== APP_VER) document.getElementById('upd-btn').style.display = 'inline-flex';
+  localStorage.setItem('ta_ver', APP_VER);
+}
+function goUpdate() {
+  if (confirm('Yeni surume git?\n' + NETLIFY_URL)) window.open(NETLIFY_URL, '_blank');
+}
+function doDownload() {
+  var isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  
+  // Check if install prompt available (PWA)
+  var installBtn = document.getElementById('install-btn');
+  if (installBtn && installBtn.style.display !== 'none') {
+    installBtn.click();
+    return;
+  }
+  
+  // For mobile without install prompt, show guidance
+  if (isMobile) {
+    var msg = 'Uygulamayi ana ekrana eklemek icin:\n\n';
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      msg += 'Safari: Paylasim butonu > Ana Ekrana Ekle';
+    } else {
+      msg += 'Chrome: Menu > Ana ekrana ekle\n\nVeya HTML dosyasini indirmek ister misin?';
+    }
+    if (confirm(msg)) {
+      var html = document.documentElement.outerHTML;
+      var blob = new Blob([html], {type:'text/html;charset=utf-8'});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a'); a.href=url; a.download='TheAlgorithm.html'; a.click(); URL.revokeObjectURL(url);
+    }
+  } else {
+    // Desktop: direct download
+    var html = document.documentElement.outerHTML;
+    var blob = new Blob([html], {type:'text/html;charset=utf-8'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a'); a.href=url; a.download='TheAlgorithm.html'; a.click(); URL.revokeObjectURL(url);
+  }
+  S.dlDone = true; saveS();
+  document.getElementById('dl-btn').style.display = 'none';
+}
+
+// ════════════════════════════════════════════
+// AUDIO — Web Audio API
+// ════════════════════════════════════════════
+function getCtx() {
+  if (!audioCtx) { try { audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e){} }
+  if (audioCtx && audioCtx.state==='suspended') audioCtx.resume();
+  return audioCtx;
+}
+function _tone(freq, type, dur, vol, startFreq) {
+  if (!sfxEnabled) return;
+  var ctx = getCtx(); if (!ctx) return;
+  var o = ctx.createOscillator(), g = ctx.createGain();
+  o.connect(g); g.connect(ctx.destination);
+  o.type = type;
+  o.frequency.value = startFreq || freq;
+  if (startFreq) o.frequency.exponentialRampToValueAtTime(freq, ctx.currentTime+dur);
+  g.gain.setValueAtTime(vol, ctx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+dur);
+  o.start(); o.stop(ctx.currentTime+dur);
+}
+function sfx_click()   { _tone(600,'square',0.04,0.06); }
+function sfx_error()   { _tone(80,'sawtooth',0.15,0.1,200); }
+function sfx_start()   { _tone(440,'square',0.08,0.07,220); }
+function sfx_tick()    { _tone(1200,'square',0.02,0.03); }
+function sfx_buy()     { [440,550,660].forEach(function(f,i){setTimeout(function(){_tone(f,'triangle',0.15,0.08);},i*70);}); }
+function sfx_upgrade() { [330,440,550,660,880].forEach(function(f,i){setTimeout(function(){_tone(f,'sine',0.12,0.09);},i*60);}); }
+function sfx_solve()   { [523,659,784,1047].forEach(function(f,i){setTimeout(function(){_tone(f,'sine',0.2,0.14);},i*100);}); }
+
+function startBGM() {
+  if (!bgmEnabled || bgmPlaying) return;
+  var ctx = getCtx(); if (!ctx) return;
+  bgmPlaying = true;
+  bgmGain = ctx.createGain(); bgmGain.gain.value = bgmVolume*0.4; bgmGain.connect(ctx.destination);
+  [[55,0],[82,5],[110,-3]].forEach(function(pair) {
+    var f=pair[0],det=pair[1];
+    var o=ctx.createOscillator(),g=ctx.createGain(),lfo=ctx.createOscillator(),lg=ctx.createGain();
+    lfo.frequency.value=0.3; lg.gain.value=4; lfo.connect(lg); lg.connect(o.detune);
+    o.type='sine'; o.frequency.value=f; o.detune.value=det; g.gain.value=0.25;
+    o.connect(g); g.connect(bgmGain); lfo.start(); o.start();
+    bgmNodes['d'+f]=o;
+  });
+  var arpNotes=[110,138,165,220,165,138]; var ai=0;
+  function arp() {
+    if (!bgmPlaying) return;
+    var ctx2=getCtx(); if(!ctx2) return;
+    var o=ctx2.createOscillator(),g=ctx2.createGain();
+    o.type='square'; o.frequency.value=arpNotes[ai%arpNotes.length];
+    g.gain.setValueAtTime(0,ctx2.currentTime); g.gain.linearRampToValueAtTime(0.04,ctx2.currentTime+0.02); g.gain.exponentialRampToValueAtTime(0.001,ctx2.currentTime+0.25);
+    o.connect(g); g.connect(bgmGain); o.start(); o.stop(ctx2.currentTime+0.3); ai++;
+    if(bgmPlaying) bgmNodes.arpT=setTimeout(arp,280+Math.random()*120);
+  }
+  bgmNodes.arpT=setTimeout(arp,1000);
+}
+function stopBGM() {
+  bgmPlaying=false; clearTimeout(bgmNodes.arpT);
+  Object.keys(bgmNodes).forEach(function(k){ try{if(bgmNodes[k].stop)bgmNodes[k].stop(); if(bgmNodes[k].disconnect)bgmNodes[k].disconnect();}catch(e){} });
+  if(bgmGain){try{bgmGain.disconnect();}catch(e){} bgmGain=null;}
+  bgmNodes={};
+}
+function toggleSFX() {
+  sfxEnabled=!sfxEnabled; S.sfxEnabled=sfxEnabled; saveS(); updSoundUI();
+  if(sfxEnabled) sfx_click();
+}
+function toggleBGM() {
+  bgmEnabled=!bgmEnabled; S.bgmEnabled=bgmEnabled; saveS(); updSoundUI();
+  if(bgmEnabled) startBGM(); else stopBGM();
+}
+function setVol(v) {
+  bgmVolume=v/100; S.bgmVolume=bgmVolume; saveS();
+  if(bgmGain) bgmGain.gain.value=bgmVolume*0.4;
+  document.getElementById('vol-lbl').textContent=v+'%';
+}
+function updSoundUI() {
+  var sfxB=document.getElementById('sfx-btn'); if(sfxB) sfxB.className='tog-btn'+(sfxEnabled?' on':'');
+  var bgmB=document.getElementById('bgm-btn'); if(bgmB) bgmB.className='tog-btn'+(bgmEnabled?' on':'');
+}
+function initSound() {
+  sfxEnabled = S.sfxEnabled!==undefined ? S.sfxEnabled : true;
+  bgmEnabled = S.bgmEnabled!==undefined ? S.bgmEnabled : false;
+  bgmVolume  = S.bgmVolume!==undefined  ? S.bgmVolume  : 0.3;
+  updSoundUI();
+  var vs=document.getElementById('vol-sl'); if(vs) vs.value=Math.round(bgmVolume*100);
+  var vl=document.getElementById('vol-lbl'); if(vl) vl.textContent=Math.round(bgmVolume*100)+'%';
+  document.addEventListener('click', function(){
+    getCtx();
+    if(bgmEnabled&&!bgmPlaying) startBGM();
+  }, {once:true});
+}
+
+// ════════════════════════════════════════════
+// EVENTS
+// ════════════════════════════════════════════
+document.addEventListener('ta:solved', function(){ setTimeout(pushStats, 1500); });
+document.addEventListener('ta:tl',     function(){ setTimeout(pushStats, 3000); });
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+loadS(); loadLibs(); loadDepot();
+if (!S.owned['edu1']) { S.owned['edu1']=true; saveS(); }
+if (!S.advHW) S.advHW = {owned:{},offers:[],lastRefresh:0};
+initAdvHW();
+if (S.theme) setTheme(S.theme);
+
+if (!S.username) {
+  document.getElementById('umodal').classList.add('show');
+} else {
+  document.getElementById('uname-disp').textContent = S.username;
+  document.getElementById('s-uname').value = S.username;
+}
+
+updTL();
+renderRecent(); renderFreq();
+document.getElementById('st-sol').textContent  = S.solved;
+document.getElementById('st-att').textContent  = numFmt(S.totalAtt);
+if (S.fastestTime) document.getElementById('st-fast').textContent = S.fastestTime.toFixed(2)+'s';
+document.getElementById('st-mult').textContent = getMult().toFixed(2)+'x';
+document.getElementById('rp-runs').textContent = S.perfRuns;
+document.getElementById('rp-avg').textContent  = S.perfRuns>0?(S.perfTotalT/S.perfRuns).toFixed(2)+'s':'—';
+if (S.algo) { document.getElementById('editor').value=S.algo; document.getElementById('char-cnt').textContent=S.algo.length+' kr'; }
+
+// Sync diff buttons
+for (var _di=0;_di<5;_di++) {
+  var _db = document.getElementById('d'+_di);
+  if (_db) _db.classList.toggle('sel', _di===S.diff);
+}
+
+document.getElementById('dl-btn').style.display='flex'; // always show download/install
+setOnline(navigator.onLine);
+initSound(); checkVer();
+HW.forEach(function(it){ if(!S.hw[it.id]) S.hw[it.id]=1; });
+
+// Editor events
+var ed = document.getElementById('editor');
+ed.addEventListener('input', function() {
+  S.algo=this.value; saveS();
+  document.getElementById('char-cnt').textContent=this.value.length+' kr';
+  if(this.value.indexOf('def crack(')!==-1) document.getElementById('errbar').classList.remove('show');
+});
+ed.addEventListener('keydown', function(e) {
+  if(e.key==='Tab'){
+    e.preventDefault();
+    var s=this.selectionStart, en=this.selectionEnd;
+    this.value=this.value.substring(0,s)+'  '+this.value.substring(en);
+    this.selectionStart=this.selectionEnd=s+2;
+  }
+});
+
+// ════════════════════════════════════════════
+// DEV CONSOLE — triple click bottom-left (init on DOMContentLoaded)
+// ════════════════════════════════════════════
+var _devClicks = 0, _devTimer = null;
+document.addEventListener('DOMContentLoaded', function() {
+  var devAreaEl = document.getElementById('dev-area');
+  if (devAreaEl) devAreaEl.addEventListener('click', function() {
+    _devClicks++;
+    clearTimeout(_devTimer);
+    _devTimer = setTimeout(function(){ _devClicks=0; }, 600);
+    if (_devClicks >= 3) {
+      _devClicks = 0;
+      var dc = document.getElementById('dev-console');
+      if (dc) {
+        dc.style.display = dc.style.display === 'none' ? 'block' : 'none';
+        var di = document.getElementById('dev-inp');
+        if (dc.style.display === 'block' && di) di.focus();
+      }
+    }
+  });
+// Make dev area larger and invisible for easier clicking
+  var devEl2 = document.getElementById('dev-area');
+  if (devEl2) devEl2.style.cssText = 'position:fixed;bottom:0;left:0;width:60px;height:60px;z-index:997;cursor:default;';
+}); // end DOMContentLoaded
+
+document.addEventListener('DOMContentLoaded', function() {
+  var devInpEl = document.getElementById('dev-inp');
+  if (devInpEl) devInpEl.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') runDev();
+    if (e.key === 'Escape') { var dc=document.getElementById('dev-console'); if(dc) dc.style.display='none'; }
+  });
+});
+
+function runDev() {
+  var inp = document.getElementById('dev-inp');
+  var out = document.getElementById('dev-out');
+  var code = inp.value.trim();
+  if (!code) return;
+  try {
+    var result = eval(code); // eslint-disable-line
+    out.style.color = '#00ff88';
+    out.textContent = result !== undefined ? JSON.stringify(result, null, 2) : '✓ Tamam';
+  } catch(e) {
+    out.style.color = '#ff5555';
+    out.textContent = 'Hata: ' + e.message;
+  }
+  inp.select();
+}
+function devRun(code) {
+  document.getElementById('dev-inp').value = code;
+  runDev();
+}
+
+
+// ════════════════════════════════════════════
+// PWA — Progressive Web App
+// ════════════════════════════════════════════
+(function() {
+  // 1. Inject Web App Manifest
+  var manifest = {
+    name: 'TheAlgorithm',
+    short_name: 'TheAlgorithm',
+    description: 'Şifre kırma simülasyon oyunu',
+    start_url: '.',
+    display: 'standalone',
+    background_color: '#050e08',
+    theme_color: '#050e08',
+    orientation: 'any',
+    icons: [
+      {
+        src: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" fill="#050e08"/><rect x="16" y="16" width="160" height="160" rx="20" fill="#0a1a0f" stroke="#00ff88" stroke-width="3"/><text x="96" y="80" text-anchor="middle" fill="#00ff88" font-size="28" font-family="monospace" font-weight="bold">THE</text><text x="96" y="115" text-anchor="middle" fill="#00cc66" font-size="20" font-family="monospace">ALGO</text><rect x="60" y="125" width="72" height="4" rx="2" fill="#009944"/><text x="96" y="155" text-anchor="middle" fill="#ffaa00" font-size="14" font-family="monospace">🔓</text></svg>'),
+        sizes: '192x192',
+        type: 'image/svg+xml',
+        purpose: 'any maskable'
+      },
+      {
+        src: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" fill="#050e08"/><rect x="32" y="32" width="448" height="448" rx="48" fill="#0a1a0f" stroke="#00ff88" stroke-width="6"/><text x="256" y="200" text-anchor="middle" fill="#00ff88" font-size="80" font-family="monospace" font-weight="bold">THE</text><text x="256" y="310" text-anchor="middle" fill="#00cc66" font-size="56" font-family="monospace">ALGORITHM</text><rect x="120" y="340" width="272" height="8" rx="4" fill="#009944"/><text x="256" y="420" text-anchor="middle" fill="#ffaa00" font-size="48" font-family="monospace">🔓</text></svg>'),
+        sizes: '512x512',
+        type: 'image/svg+xml',
+        purpose: 'any maskable'
+      }
+    ]
+  };
+  
+  var manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+  var manifestURL = URL.createObjectURL(manifestBlob);
+  var manifestLink = document.createElement('link');
+  manifestLink.rel = 'manifest';
+  manifestLink.href = manifestURL;
+  document.head.appendChild(manifestLink);
+
+  // 2. Register Service Worker (inline via blob)
+  var swCode = `
+const CACHE = 'ta-v1';
+const ASSETS = ['/'];
+
+self.addEventListener('install', e => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(clients.claim());
+});
+
+self.addEventListener('fetch', e => {
+  // Cache-first for same-origin, network for external
+  if (e.request.url.startsWith(self.location.origin)) {
+    e.respondWith(
+      caches.match(e.request).then(cached => cached || fetch(e.request))
+    );
+  }
+});
+`;
+
+  if ('serviceWorker' in navigator) {
+    var swBlob = new Blob([swCode], {type: 'application/javascript'});
+    var swURL = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swURL).then(function(reg) {
+      console.log('[PWA] Service Worker registered');
+    }).catch(function(e) {
+      console.warn('[PWA] SW registration failed:', e.message);
+    });
+  }
+
+  // 3. Install prompt handling
+  var _deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    _deferredPrompt = e;
+    // Show install button
+    var btn = document.getElementById('install-btn');
+    if (btn) {
+      btn.style.display = 'flex';
+      btn.onclick = function() {
+        _deferredPrompt.prompt();
+        _deferredPrompt.userChoice.then(function(result) {
+          if (result.outcome === 'accepted') {
+            btn.style.display = 'none';
+            log('[PWA] Uygulama kuruldu!', 's');
+          }
+          _deferredPrompt = null;
+        });
+      };
+    }
+  });
+
+  window.addEventListener('appinstalled', function() {
+    var btn = document.getElementById('install-btn');
+    if (btn) btn.style.display = 'none';
+    log('[PWA] Uygulama başarıyla kuruldu!', 's');
+  });
+
+  // 4. Standalone detection
+  if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+    document.body.classList.add('pwa-mode');
+    console.log('[PWA] Standalone modda çalışıyor');
+  }
+})();
+
+// Online probe
+fetch('https://api.jsonbin.io/v3/b/' + JBIN_BIN + '/latest', {headers:{'X-Master-Key':JBIN_KEY}})
+  .then(function(){setOnline(true);}).catch(function(){});
+
+</script>
+
+<!-- DEV CONSOLE (triple-click bottom-left) -->
+<div id="dev-area" style="position:fixed;bottom:0;left:0;width:0;height:0;z-index:999;"></div>
+<div id="dev-console" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#000;border-top:2px solid var(--amber);z-index:998;padding:10px 14px;box-shadow:0 -4px 20px rgba(0,0,0,.8);">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+    <span style="font-family:var(--ft);font-size:11px;color:var(--amber);letter-spacing:2px;">DEV CONSOLE</span>
+    <span style="font-size:11px;color:var(--text3);font-family:var(--fm2);">Test komutları çalıştır</span>
+    <button onclick="document.getElementById('dev-console').style.display='none'" style="margin-left:auto;background:none;border:1px solid var(--red);border-radius:3px;color:var(--red);padding:2px 8px;cursor:pointer;font-size:11px;">✕ Kapat</button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr auto;gap:8px;">
+    <input id="dev-inp" style="background:#0a0a0a;border:1px solid var(--amber);border-radius:4px;color:var(--amber);font-family:var(--fm2);font-size:13px;padding:7px 12px;outline:none;" placeholder="JS kodu gir... (Enter ile çalıştır)">
+    <button onclick="runDev()" style="background:rgba(255,170,0,.1);border:1px solid var(--amber);border-radius:4px;color:var(--amber);font-family:var(--fm);font-weight:700;font-size:13px;padding:7px 14px;cursor:pointer;">▶ Çalıştır</button>
+  </div>
+  <div style="margin-top:8px;font-size:11px;color:var(--text3);font-family:var(--fm2);display:flex;flex-wrap:wrap;gap:6px;">
+    <span style="color:var(--text3);">Hızlı:</span>
+    <button onclick="devRun('addTL(100)')" class="dev-q">+100 TL</button>
+    <button onclick="devRun('addTL(1000)')" class="dev-q">+1000 TL</button>
+    <button onclick="devRun('HW.forEach(function(it){S.hw[it.id]=it.max});saveS();renderHW()')" class="dev-q">Max Donanım</button>
+    <button onclick="devRun('S.owned={edu1:true,edu2:true,edu3:true,edu4:true,edu5:true,edu6:true};saveS();renderStore();renderCmd()')" class="dev-q">Tüm Eğitimler</button>
+    <button onclick="devRun('S.solved=50;S.tl+=500;S.fastestTime=0.5;saveS();updTL();')" class="dev-q">Sıralama Verisi</button>
+    <button onclick="devRun('DEPOT={};saveDepot();renderDepot()')" class="dev-q">Depo Temizle</button>
+    <button onclick="devRun('LIBS={};saveLibs();renderLibList()')" class="dev-q">Kütüphane Temizle</button>
+    <button onclick="devRun('S.advHW={owned:{},offers:[],lastRefresh:0};initAdvHW();saveS()')" class="dev-q">Adv HW Sıfırla</button>
+    <button onclick="devRun('console.log("TL:",S.tl,"Solved:",S.solved,"Mult:",getMult(),"HW:",S.hw)')" class="dev-q">Durum Yazdır</button>
+    <button onclick="devRun('S.tl=0;S.sesTl=0;S.solved=0;S.totalAtt=0;S.fastestTime=null;S.recentSolves=[];S.freqData={};saveS();updTL();renderRecent();renderFreq()')" class="dev-q">İstatistik Sıfırla</button>
+  </div>
+  <div id="dev-out" style="margin-top:8px;font-family:var(--fm2);font-size:11px;color:#00ff88;background:#050505;border:1px solid #1a1a1a;border-radius:3px;padding:5px 8px;min-height:22px;max-height:80px;overflow-y:auto;white-space:pre-wrap;"></div>
+</div>
+<style>
+.dev-q{background:rgba(255,170,0,.08);border:1px solid rgba(255,170,0,.3);border-radius:3px;color:var(--amber);font-family:var(--fm2);font-size:10px;padding:2px 7px;cursor:pointer;transition:all .15s;}
+.dev-q:hover{background:rgba(255,170,0,.2);border-color:var(--amber);}
+</style>
+
+</body>
+</html>
+
